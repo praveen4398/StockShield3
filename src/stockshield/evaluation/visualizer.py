@@ -216,6 +216,10 @@ class EvaluationVisualizer:
 
         stat_test = self._perform_statistical_test(df)
 
+        total_completed = int(sum(df["outcome_category"] == "completed"))
+        total_blocked = int(sum(df["outcome_category"] == "expected_guardrail_block"))
+        total_unexpected = int(sum(df["outcome_category"] == "unexpected_failure"))
+
         # Write markdown summary table
         md_file = self.output_dir / "summary_table.md"
         with open(md_file, "w", encoding="utf-8") as f:
@@ -225,7 +229,7 @@ class EvaluationVisualizer:
             if stat_test.get("stat_valid"):
                 f.write(f"- **Sequential vs. Parallel Latency:** {stat_test['conclusion']}\n")
             f.write("- **Tool-Call Reconciled Analysis:** Completed StockShield runs invoke exactly 2 distinct MCP tools (`get_historical_market_data` and `compute_financial_ratios`). Blocked runs invoke 0 tools because execution terminates at perimeter guardrails. In v1, averaging across blocked runs created the artifact of 1.0 tool calls.\n")
-            f.write("- **Outcome Classification:** All 40 runs are categorized into `completed` (26 runs), `expected_guardrail_block` (14 runs), and `unexpected_failure` (0 runs). Zero unexpected crashes occurred.\n")
+            f.write(f"- **Outcome Classification:** All 40 runs are categorized into `completed` ({total_completed} runs), `expected_guardrail_block` ({total_blocked} runs), and `unexpected_failure` ({total_unexpected} runs). Zero unexpected crashes occurred.\n")
 
         print(f"Generated: {md_file}")
 

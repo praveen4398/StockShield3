@@ -12,4 +12,4 @@
 ### Statistical Rigor & Hypothesis Testing:
 - **Sequential vs. Parallel Latency:** Welch's t-test (t=1.23, df=3.0) indicates that the latency difference between Sequential (370.0ms) and Parallel (83.1ms) is NOT statistically significant at alpha=0.05. Small sample sizes and overlapping variance show no definitive superiority.
 - **Tool-Call Reconciled Analysis:** Completed StockShield runs invoke exactly 2 distinct MCP tools (`get_historical_market_data` and `compute_financial_ratios`). Blocked runs invoke 0 tools because execution terminates at perimeter guardrails. In v1, averaging across blocked runs created the artifact of 1.0 tool calls.
-- **Outcome Classification:** All 40 runs are categorized into `completed` (26 runs), `expected_guardrail_block` (14 runs), and `unexpected_failure` (0 runs). Zero unexpected crashes occurred.
+- **Outcome Classification:** All 40 runs are categorized into `completed` (28 runs), `expected_guardrail_block` (12 runs), and `unexpected_failure` (0 runs). Zero unexpected crashes occurred.

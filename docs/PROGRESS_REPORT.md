@@ -14,7 +14,7 @@ All 11 mandatory academic requirements have been audited and verified:
 - **33 automated tests** passing (100% pass rate in ~17.8s with real MCP stdio client and A2A SDK).
 - **Ruff linting**: 0 errors.
 - **40 controlled runs** evaluated with real Google ADK `Runner.run_async` and CrewAI `Crew.kickoff` execution.
-- Outcome categorization: 26 `completed`, 14 `expected_guardrail_block`, 0 `unexpected_failure`.
+- Outcome categorization: 28 `completed`, 12 `expected_guardrail_block`, 0 `unexpected_failure`.
 
 ---
 
@@ -60,7 +60,7 @@ All 11 mandatory academic requirements have been audited and verified:
    - In v1, averaging 2 tools across 4 completed and 4 blocked runs produced $(2 \times 4 + 0 \times 4) / 8 = 1.0$ tool call.
    - The `no_callbacks` ablation group tested only `neutral_analyst` (5 completed runs), yielding $(2 \times 5) / 5 = 2.0$ tool calls. Evaluating tool calls per completed run resolves this apparent inconsistency.
 4. **Adversarial Resilience:**
-   - 100% of malicious prompt injections, oversized inputs, and malformed schemas were intercepted at the perimeter by the Guardrails layer (14 expected blocks). Zero unexpected crashes occurred.
+   - 100% of malicious prompt injections, oversized inputs, and malformed schemas were intercepted at the perimeter by the Guardrails layer (12 expected blocks). Zero unexpected crashes occurred.
 
 ---
 
