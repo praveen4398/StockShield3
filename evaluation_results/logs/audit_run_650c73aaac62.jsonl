@@ -1,0 +1,1 @@
+{"run_id":"run_650c73aaac62","trace_id":"trace_84eaca16200d4c8b","timestamp_utc":"2026-10-29T10:57:09.996524+00:00","component":"guardrails_engine","event_type":"guardrail_trigger","status":"blocked","duration_ms":null,"error_category":null,"metadata":{"action":"BLOCK","security_flag":"PROMPT_INJECTION_ATTEMPT"}}

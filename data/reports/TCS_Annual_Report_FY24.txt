@@ -1,0 +1,26 @@
+--- Page 1 ---
+TATA CONSULTANCY SERVICES LIMITED
+Annual Report 2023-2024
+Corporate Overview and Financial Highlights
+Consolidated Financial Summary (in INR Crores)
+Revenue from Operations: 240,893
+Operating Income (EBIT): 59,150
+Net Income (PAT): 46,099
+Total Equity: 90,534
+Total Debt: 8,140
+Cash and Cash Equivalents: 11,280
+
+--- Page 2 ---
+Management Discussion and Analysis (MD&A)
+Business Review:
+During FY2024, TCS maintained steady growth driven by Cloud transformation, Generative AI adoption, and enterprise digital core modernization.
+Operating Margin expanded to 24.6% reflecting operational efficiencies and robust project execution.
+Risk Management:
+Foreign exchange risk, macroeconomic volatility in North America and Continental Europe, and wage inflation were closely monitored.
+Debt-to-equity ratio remains conservative at 0.09. Current ratio stands at 2.45.
+
+--- Page 3 ---
+Corporate Governance and Shareholder Value:
+Total dividend payout for the year was INR 73 per share, representing high cash return to shareholders.
+Order book total contract value (TCV) stood at USD 42.7 billion.
+Employee attrition lowered to 12.5% in IT services.

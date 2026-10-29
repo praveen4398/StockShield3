@@ -1,0 +1,18 @@
+--- Page 1 ---
+INFOSYS LIMITED
+Annual Report 2023-2024
+Financial Highlights (in INR Crores)
+Revenues: 153,670
+Operating Profit (EBIT): 31,747
+Net Profit: 26,248
+Total Equity: 86,412
+Total Debt: 8,020
+Current Assets: 54,200
+Current Liabilities: 25,600
+
+--- Page 2 ---
+Strategic Direction & Performance Review:
+Infosys Topaz and generative AI services scaled across global enterprise clients.
+Operating margin was 20.7% amidst challenging macroeconomic discretionary spending environments.
+Capital allocation policy resulted in 85% of free cash flow returned via dividends and buybacks.
+Debt-to-equity ratio maintained at 0.09.

@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: stockshield-api
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATA_PROVIDER_MODE
+        value: fixture
+      - key: LLM_PROVIDER
+        value: stub
+      - key: DEFAULT_WORKFLOW
+        value: sequential
+      - key: ENABLE_CALLBACKS
+        value: "true"
+      - key: ENABLE_GUARDRAILS
+        value: "true"

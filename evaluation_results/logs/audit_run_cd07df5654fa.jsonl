@@ -1,0 +1,1 @@
+{"run_id":"run_cd07df5654fa","trace_id":"trace_39d6ae6bc215471d","timestamp_utc":"2026-10-29T10:57:10.161364+00:00","component":"guardrails_engine","event_type":"guardrail_trigger","status":"blocked","duration_ms":null,"error_category":null,"metadata":{"action":"BLOCK","security_flag":"SCHEMA_VIOLATION"}}
