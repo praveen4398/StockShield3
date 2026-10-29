@@ -1,6 +1,7 @@
 """Pydantic schemas for the Agent-to-Agent (A2A) Protocol (v1.0)."""
 
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 

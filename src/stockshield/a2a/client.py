@@ -1,20 +1,24 @@
-"""CrewAI A2A Client for inter-agent communication with Google ADK Technical Agent."""
+"""CrewAI A2A Client implementing genuine A2A Protocol using a2a-sdk."""
 
 import time
 import uuid
 from typing import Any, Dict, Optional
+
 import httpx
-from stockshield.a2a.models import A2AAgentCard, A2ATaskRequest, A2ATaskResponse
+from a2a.client.card_resolver import A2ACardResolver
+from a2a.types import AgentCard
+
+from stockshield.a2a.models import A2ATaskRequest, A2ATaskResponse
 from stockshield.blackboard.blackboard import BlackboardManager
 from stockshield.blackboard.models import FindingStatus
 
 
 class CrewAIA2AClient:
     """Inter-agent communication client representing the CrewAI Orchestrator.
-    
-    Conducts genuine protocol exchanges:
-    1. Discovers AgentCard from the Google ADK server.
-    2. Validates capability requirements.
+
+    Conducts genuine protocol exchanges using the official a2a-sdk:
+    1. Discovers AgentCard from Google ADK server using A2ACardResolver.
+    2. Validates declared skills and interface bindings.
     3. Dispatches task request payload.
     4. Validates structured response with Pydantic.
     5. Writes findings to the Blackboard with A2A protocol provenance.
@@ -24,18 +28,15 @@ class CrewAIA2AClient:
         self.base_url = base_url.rstrip("/")
         self.client_name = client_name
 
-    async def discover_agent(self, client: Optional[httpx.AsyncClient] = None) -> A2AAgentCard:
-        """Step 1: Protocol Discovery of AgentCard."""
-        url = f"{self.base_url}/.well-known/agent.json"
+    async def discover_agent(self, client: Optional[httpx.AsyncClient] = None) -> AgentCard:
+        """Step 1: Protocol Discovery of AgentCard using a2a-sdk A2ACardResolver."""
         if client:
-            res = await client.get(url, timeout=5.0)
-            res.raise_for_status()
-            return A2AAgentCard.model_validate(res.json())
+            resolver = A2ACardResolver(client, base_url=self.base_url)
+            return await resolver.get_agent_card()
 
         async with httpx.AsyncClient() as c:
-            res = await c.get(url, timeout=5.0)
-            res.raise_for_status()
-            return A2AAgentCard.model_validate(res.json())
+            resolver = A2ACardResolver(c, base_url=self.base_url)
+            return await resolver.get_agent_card()
 
     async def execute_task(
         self,
@@ -56,21 +57,32 @@ class CrewAIA2AClient:
 
         raw_bars = [b.model_dump() for b in state.market_data.bars]
 
-        # 1. Discover AgentCard
+        # 1. Discover AgentCard via a2a-sdk resolver
         try:
             agent_card = await self.discover_agent(client=custom_client)
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
-            return {"status": "failed", "error": f"A2A AgentCard discovery failed: {str(e)}", "duration_ms": duration_ms}
+            return {
+                "status": "failed",
+                "error": f"A2A AgentCard resolution failed via a2a-sdk: {str(e)}",
+                "duration_ms": duration_ms,
+            }
 
-        # 2. Verify Capabilities
-        required_caps = {"sma_20_50_200", "rsi_14_wilder"}
-        if not required_caps.issubset(set(agent_card.capabilities)):
-            err = f"Agent '{agent_card.name}' lacks required capabilities: {required_caps - set(agent_card.capabilities)}"
+        # 2. Verify Skills declared on AgentCard
+        declared_skills = {s.name for s in agent_card.skills}
+        required_skills = {"sma_20_50_200", "rsi_14_wilder"}
+        if not required_skills.issubset(declared_skills):
+            err = f"Agent '{agent_card.name}' lacks required skills: {required_skills - declared_skills}"
             duration_ms = (time.perf_counter() - start_time) * 1000
             return {"status": "failed", "error": err, "duration_ms": duration_ms}
 
-        # 3. Construct Task Request
+        # 3. Determine task endpoint from supported_interfaces
+        task_endpoint = "/a2a/tasks"
+        if len(agent_card.supported_interfaces) > 0 and agent_card.supported_interfaces[0].url:
+            raw_url = agent_card.supported_interfaces[0].url
+            task_endpoint = raw_url if raw_url.startswith("/") else f"/{raw_url.lstrip('/')}"
+
+        # 4. Construct Task Request
         task_req = A2ATaskRequest(
             task_id=task_id,
             sender_agent_id=self.client_name,
@@ -80,8 +92,8 @@ class CrewAIA2AClient:
             timeout_seconds=timeout_seconds,
         )
 
-        # 4. Transmit Task Request over Protocol
-        tasks_url = f"{self.base_url}{agent_card.endpoints.tasks}"
+        # 5. Transmit Task Request over Protocol
+        tasks_url = f"{self.base_url}{task_endpoint}"
         try:
             if custom_client:
                 http_res = await custom_client.post(tasks_url, json=task_req.model_dump(), timeout=timeout_seconds)
@@ -95,7 +107,7 @@ class CrewAIA2AClient:
             duration_ms = (time.perf_counter() - start_time) * 1000
             return {"status": "failed", "error": f"A2A protocol exchange failed: {str(e)}", "duration_ms": duration_ms}
 
-        # 5. Validate Findings and Commit to Blackboard
+        # 6. Validate Findings and Commit to Blackboard
         if task_response.status != "completed" or not task_response.findings:
             err = task_response.error or "A2A task did not complete successfully"
             await blackboard.update_technical_findings(
@@ -117,9 +129,9 @@ class CrewAIA2AClient:
         warnings = findings.get("warnings", [])
 
         summary = (
-            f"[A2A Protocol Exchange from {self.client_name} -> {agent_card.name}] "
+            f"[A2A Protocol Exchange via a2a-sdk: {self.client_name} -> {agent_card.name}] "
             f"Indicators computed: Signal={signal} ({int(confidence * 100)}% conf). "
-            f"Protocol: {task_response.protocol_version}, TaskID: {task_id}."
+            f"TaskID: {task_id}."
         )
 
         await blackboard.update_technical_findings(
@@ -139,6 +151,10 @@ class CrewAIA2AClient:
             "status": "completed",
             "task_id": task_id,
             "duration_ms": duration_ms,
-            "agent_card": agent_card.model_dump(),
+            "agent_card": {
+                "name": agent_card.name,
+                "version": agent_card.version,
+                "skills": [s.name for s in agent_card.skills],
+            },
             "findings": findings,
         }

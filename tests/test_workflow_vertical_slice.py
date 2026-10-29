@@ -22,7 +22,7 @@ async def test_vertical_slice_sequential():
 
     # 2. Market Data populated via MCP
     assert state.market_data.status == FindingStatus.AVAILABLE
-    assert state.market_data.source == "fixture"
+    assert "fixture" in state.market_data.source
     assert state.market_data.bar_count == 200
 
     # 3. Technical Findings populated via Google ADK

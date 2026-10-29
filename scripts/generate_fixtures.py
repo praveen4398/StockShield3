@@ -56,7 +56,7 @@ def generate_series(
     return {
         "metadata": {
             "ticker": ticker,
-            "source": "fixture",
+            "source": "synthetic_fixture",
             "price_adjustment": "adjusted_close",
             "retrieval_date": "2026-03-15T00:00:00Z",
             "currency": "INR",
@@ -64,7 +64,7 @@ def generate_series(
             "bar_count": len(bars),
             "start_date": bars[0]["timestamp"],
             "end_date": bars[-1]["timestamp"],
-            "data_quality_status": "verified_fixture"
+            "data_quality_status": "SYNTHETIC_GENERATED_FIXTURE"
         },
         "bars": bars
     }

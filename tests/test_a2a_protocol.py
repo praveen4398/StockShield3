@@ -1,7 +1,8 @@
-"""Unit and integration tests for genuine A2A protocol communication."""
+"""Unit and integration tests for genuine A2A protocol communication using a2a-sdk."""
 
 import httpx
 import pytest
+
 from stockshield.a2a.client import CrewAIA2AClient
 from stockshield.api.main import app
 from stockshield.blackboard.blackboard import BlackboardManager
@@ -15,9 +16,28 @@ async def test_a2a_agent_card_discovery():
         card = await a2a_client.discover_agent(client=client)
 
         assert card.name == "GoogleADKTechnicalAgent"
-        assert "Google ADK" in card.framework
-        assert "sma_20_50_200" in card.capabilities
-        assert card.endpoints.tasks == "/a2a/tasks"
+        assert card.version == "2.0.0"
+        skill_names = [s.name for s in card.skills]
+        assert "sma_20_50_200" in skill_names
+        assert "rsi_14_wilder" in skill_names
+        assert card.supported_interfaces[0].url == "/a2a/tasks"
+
+
+@pytest.mark.asyncio
+async def test_a2a_endpoints_json_validity():
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://testserver") as client:
+        # Check official RFC / a2a-sdk route
+        res_official = await client.get("/.well-known/agent-card.json")
+        assert res_official.status_code == 200
+        data_official = res_official.json()
+        assert data_official["name"] == "GoogleADKTechnicalAgent"
+        assert "skills" in data_official
+
+        # Check backwards-compatible legacy route
+        res_legacy = await client.get("/.well-known/agent.json")
+        assert res_legacy.status_code == 200
+        data_legacy = res_legacy.json()
+        assert data_legacy["name"] == "GoogleADKTechnicalAgent"
 
 
 @pytest.mark.asyncio
@@ -28,12 +48,20 @@ async def test_a2a_task_execution_and_blackboard_update():
         # Initialize Blackboard with market data
         bb = BlackboardManager("run_a2a_01", "trace_a2a_01", "TCS.NS", "A2A Protocol Test")
         sample_bars = [
-            {"timestamp": f"2025-01-{i+1:02d}", "open": 3500.0, "high": 3550.0, "low": 3480.0, "close": 3520.0, "adjusted_close": 3520.0, "volume": 1000000}
+            {
+                "timestamp": f"2025-01-{i + 1:02d}",
+                "open": 3500.0,
+                "high": 3550.0,
+                "low": 3480.0,
+                "close": 3520.0,
+                "adjusted_close": 3520.0,
+                "volume": 1000000,
+            }
             for i in range(25)
         ]
         await bb.update_market_data(
             producer="test_provider",
-            source="fixture",
+            source="synthetic_fixture",
             bars=sample_bars,
             status=FindingStatus.AVAILABLE,
         )

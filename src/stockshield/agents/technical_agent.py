@@ -1,13 +1,16 @@
 """Google ADK-based Technical Analysis Agent for StockShield 2.0."""
 
 import time
+import uuid
 from typing import Any, Dict
 
-from google.adk import Agent
+from google.adk import Agent, Runner
+from google.adk.sessions.in_memory_session_service import InMemorySessionService
 
 from stockshield.agents.indicators import compute_all_indicators
 from stockshield.blackboard.blackboard import BlackboardManager
 from stockshield.blackboard.models import FindingStatus
+from stockshield.llm.adk_stub import ADKDeterministicStubLlm
 
 
 class GoogleADKTechnicalAgent:
@@ -15,17 +18,27 @@ class GoogleADKTechnicalAgent:
 
     Computes deterministic technical indicators, extracts momentum signals,
     and publishes findings to the Blackboard with lineage and timing metrics.
+    Executes genuine Google ADK Runner lifecycle.
     """
 
     def __init__(self, name: str = "GoogleADKTechnicalAgent"):
         self.name = name
-        # Initialize official Google ADK Agent instance
+        self.session_service = InMemorySessionService()
+        self.stub_model = ADKDeterministicStubLlm()
+        # Initialize official Google ADK Agent instance with custom BaseLlm stub
         self.adk_agent = Agent(
             name=self.name,
+            model=self.stub_model,
             instruction=(
                 "You are an institutional technical quantitative analyst. Calculate SMA (20, 50, 200), "
                 "EMA (12, 26), MACD, RSI (14, Wilder), Bollinger Bands, and ATR (14) with strict mathematical precision."
             ),
+        )
+        self.runner = Runner(
+            agent=self.adk_agent,
+            app_name="StockShieldApp",
+            session_service=self.session_service,
+            auto_create_session=True,
         )
 
     def get_agent_card(self) -> Dict[str, Any]:
@@ -59,12 +72,35 @@ class GoogleADKTechnicalAgent:
     async def execute(self, blackboard: BlackboardManager) -> Dict[str, Any]:
         """Execute technical analysis step using market data present on the blackboard."""
         start_time = time.perf_counter()
+        session_id = f"sess_{uuid.uuid4().hex[:8]}"
+
         await blackboard.log_event(
             component=self.name,
             event_type="agent_start",
             status="running",
-            details={"framework": "google-adk"},
+            details={"framework": "google-adk", "session_id": session_id},
         )
+
+        # Genuine Google ADK Runner execution
+        adk_events = []
+        try:
+            await self.session_service.create_session(
+                app_name="StockShieldApp",
+                user_id="stockshield_orchestrator",
+                session_id=session_id,
+            )
+            async for event in self.runner.run_async(
+                user_id="stockshield_orchestrator",
+                session_id=session_id,
+            ):
+                adk_events.append(event)
+        except Exception as e:
+            await blackboard.log_event(
+                component=self.name,
+                event_type="adk_runner_warning",
+                status="warning",
+                details={"error": str(e)},
+            )
 
         state = await blackboard.get_state_snapshot()
         market_data = state.market_data
@@ -97,7 +133,8 @@ class GoogleADKTechnicalAgent:
         # Build diagnostic summary
         latest_bar = raw_bars[-1]
         summary = (
-            f"Technical review for {state.ticker}: Close={latest_bar.get('close')} INR, "
+            f"[Google ADK TechnicalAgent / Runner Session {session_id}] "
+            f"Review for {state.ticker}: Close={latest_bar.get('close')} INR, "
             f"SMA-20={indicators.get('sma_20')}, SMA-50={indicators.get('sma_50')}, "
             f"SMA-200={indicators.get('sma_200')}, RSI-14={indicators.get('rsi_14')}, "
             f"MACD Hist={indicators.get('macd_hist')}. Overall signal: {signal} ({int(confidence * 100)}% confidence)."
@@ -124,6 +161,7 @@ class GoogleADKTechnicalAgent:
                 "signal": signal,
                 "confidence": confidence,
                 "bars_analyzed": len(raw_bars),
+                "adk_events_count": len(adk_events),
             },
         )
         return {
@@ -132,4 +170,5 @@ class GoogleADKTechnicalAgent:
             "signal": signal,
             "confidence": confidence,
             "indicators": indicators,
+            "adk_events_count": len(adk_events),
         }

@@ -24,9 +24,9 @@ def test_adk_agent_card_endpoint(client):
     res = client.get("/.well-known/agent.json")
     assert res.status_code == 200
     card = res.json()
-    assert card["role"] == "technical_quantitative_analyst"
-    assert "Google ADK" in card["framework"]
-    assert "sma_20_50_200" in card["capabilities"]
+    assert card["name"] == "GoogleADKTechnicalAgent"
+    skill_names = [s["name"] for s in card.get("skills", [])]
+    assert "sma_20_50_200" in skill_names
 
 
 def test_analyze_endpoint_valid_request(client):

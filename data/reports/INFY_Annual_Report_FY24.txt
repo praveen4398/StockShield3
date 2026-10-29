@@ -1,7 +1,11 @@
+[SYNTHETIC SAMPLE TEXT - NOT VERIFIED OFFICIAL FILING - PENDING ORIGINAL PDF UPLOAD]
+Note for Verification: To replace this synthetic sample, provide the official Infosys Annual Report 2023-2024 PDF.
+Required verification details to supply: Official Source URL, Document Title, and exact audited pages for Strategic Review and Balance Sheet.
+
 --- Page 1 ---
 INFOSYS LIMITED
 Annual Report 2023-2024
-Financial Highlights (in INR Crores)
+Financial Highlights (in INR Crores) [SYNTHETIC SAMPLE TEXT]
 Revenues: 153,670
 Operating Profit (EBIT): 31,747
 Net Profit: 26,248
@@ -11,7 +15,7 @@ Current Assets: 54,200
 Current Liabilities: 25,600
 
 --- Page 2 ---
-Strategic Direction & Performance Review:
+Strategic Direction & Performance Review: [SYNTHETIC SAMPLE TEXT]
 Infosys Topaz and generative AI services scaled across global enterprise clients.
 Operating margin was 20.7% amidst challenging macroeconomic discretionary spending environments.
 Capital allocation policy resulted in 85% of free cash flow returned via dividends and buybacks.

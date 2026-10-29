@@ -47,3 +47,5 @@ htmlcov/
 # Project outputs that shouldn't be tracked if large
 # (evaluation results scripts/reports will be tracked, raw logs can be ignored if temporary)
 *.log
+evaluation_results/logs/
+
