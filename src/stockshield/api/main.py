@@ -32,7 +32,10 @@ _workflow = StockShieldWorkflow()
 
 
 class AnalysisRequestPayload(BaseModel):
-    ticker: str = Field(..., description="Indian NSE equity ticker, e.g., TCS.NS, INFY.NS, RELIANCE.NS")
+    ticker: str = Field(
+        ...,
+        description="Indian NSE equity ticker, e.g., TCS.NS, INFY.NS, RELIANCE.NS, HDFCBANK.NS, WIPRO.NS",
+    )
     user_prompt: str = Field(
         default="Conduct institutional technical momentum and deterministic risk intelligence review.",
         description="User analysis directive or query",
@@ -43,6 +46,10 @@ class AnalysisRequestPayload(BaseModel):
         description="Execution topology: sequential, parallel, or hierarchical",
     )
     risk_profile: str = Field(default="moderate", description="conservative, moderate, aggressive")
+    provider_mode: str = Field(
+        default="auto",
+        description="Market data provider mode: 'auto' (fixture if available, else Yahoo Finance), 'fixture' (offline), or 'live' (Yahoo Finance)",
+    )
 
 
 class HealthResponse(BaseModel):
@@ -51,6 +58,7 @@ class HealthResponse(BaseModel):
     timestamp_utc: str
     mcp_tools: list[str]
     allowed_tickers: list[str]
+    supported_provider_modes: list[str] = Field(default_factory=lambda: ["auto", "fixture", "live"])
     environment: str
 
 
@@ -63,6 +71,7 @@ async def health_check():
         timestamp_utc=datetime.now(timezone.utc).isoformat(),
         mcp_tools=["get_historical_market_data", "compute_financial_ratios", "search_financial_document"],
         allowed_tickers=["TCS.NS", "INFY.NS", "RELIANCE.NS"],
+        supported_provider_modes=["auto", "fixture", "live"],
         environment="production" if False else "development",
     )
 
@@ -117,6 +126,7 @@ async def analyze_stock(payload: AnalysisRequestPayload):
                     "agent_statuses": blackboard_state.agent_statuses,
                     "provenance_records_count": len(blackboard_state.provenance_trail),
                     "execution_events_count": len(blackboard_state.execution_events),
+                    "execution_events": blackboard_state.execution_events,
                     "validation_errors": blackboard_state.validation_errors,
                 },
                 "cost_and_tokens": {

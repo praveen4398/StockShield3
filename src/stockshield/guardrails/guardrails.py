@@ -32,14 +32,25 @@ class UserAnalysisRequest(BaseModel):
     lookback_days: int = Field(default=200, ge=1, le=50000)
     risk_profile: str = "moderate"
     workflow_mode: str = "sequential"  # sequential, parallel, hierarchical
+    provider_mode: str = "auto"  # auto, fixture, live
 
     @field_validator("ticker")
     @classmethod
     def validate_ticker_format(cls, v: str) -> str:
         cleaned = v.strip().upper()
-        if not re.match(r"^[A-Z0-9\.\-_]{2,15}$", cleaned):
-            raise ValueError(f"Ticker symbol '{v}' contains illegal characters.")
+        if "." not in cleaned:
+            cleaned = f"{cleaned}.NS"
+        if not re.match(r"^[A-Z0-9\-_]{1,12}\.(NS|BO)$", cleaned):
+            raise ValueError(f"Ticker symbol '{v}' is not a valid NSE/BSE ticker format.")
         return cleaned
+
+    @field_validator("provider_mode")
+    @classmethod
+    def validate_provider_mode(cls, v: str) -> str:
+        mode = v.strip().lower()
+        if mode not in {"auto", "fixture", "live"}:
+            raise ValueError(f"Invalid provider_mode '{v}'. Allowed modes: auto, fixture, live.")
+        return mode
 
 
 class GuardrailResult(BaseModel):
@@ -93,19 +104,20 @@ class GuardrailsEngine:
                 None,
             )
 
-        # 3. Ticker Whitelist Check
-        if validated_req.ticker not in self.allowed_tickers:
-            return (
-                GuardrailResult(
-                    passed=False,
-                    action="BLOCK",
-                    reason=f"Ticker '{validated_req.ticker}' is not supported in offline institutional universe. Allowed: {sorted(list(self.allowed_tickers))}",
-                    security_flag="UNSUPPORTED_TICKER",
-                    sanitized_prompt=prompt,
-                    sanitized_ticker=validated_req.ticker,
-                ),
-                None,
-            )
+        # 3. Ticker Whitelist Check (strictly enforced for offline fixture mode)
+        if validated_req.provider_mode == "fixture":
+            if validated_req.ticker not in self.allowed_tickers:
+                return (
+                    GuardrailResult(
+                        passed=False,
+                        action="BLOCK",
+                        reason=f"Ticker '{validated_req.ticker}' is not supported in offline fixture universe. Allowed: {sorted(list(self.allowed_tickers))}",
+                        security_flag="UNSUPPORTED_TICKER",
+                        sanitized_prompt=prompt,
+                        sanitized_ticker=validated_req.ticker,
+                    ),
+                    None,
+                )
 
         # 4. Prompt Injection Detection (prompt_injection_user)
         prompt_lower = prompt.lower()

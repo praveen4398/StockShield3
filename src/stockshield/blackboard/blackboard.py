@@ -57,6 +57,11 @@ class BlackboardManager:
             }
             self._state.execution_events.append(event)
 
+    async def update_agent_status(self, agent_name: str, status: str):
+        """Update operational status for an orchestrator or agent component."""
+        async with self._lock:
+            self._state.agent_statuses[agent_name] = status
+
     async def update_market_data(
         self,
         producer: str,

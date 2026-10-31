@@ -1,0 +1,428 @@
+{
+  "step1_app": {
+    "health_http_status": 200,
+    "health_payload": {
+      "status": "healthy",
+      "version": "2.0.0",
+      "timestamp_utc": "2026-10-29T16:02:50.732789+00:00",
+      "mcp_tools": [
+        "get_historical_market_data",
+        "compute_financial_ratios",
+        "search_financial_document"
+      ],
+      "allowed_tickers": [
+        "TCS.NS",
+        "INFY.NS",
+        "RELIANCE.NS"
+      ],
+      "environment": "development"
+    },
+    "agent_card_status": 200,
+    "legacy_card_status": 200
+  },
+  "step2_api_tickers": {
+    "TCS.NS": {
+      "http_status": 200,
+      "workflow_status": "completed",
+      "latency_ms": 297.83,
+      "has_all_sections": true,
+      "market_data_status": "available",
+      "data_quality": "valid",
+      "bar_count": 200,
+      "technical_signal": "NEUTRAL",
+      "technical_confidence": 0.5,
+      "indicators": {
+        "sma_20": 4294.1805,
+        "sma_50": 4377.5072,
+        "sma_200": 4182.108,
+        "ema_12": 4183.5404,
+        "ema_26": 4286.4326,
+        "macd_line": -102.8922,
+        "macd_signal": -76.9898,
+        "macd_hist": -25.9024,
+        "rsi_14": 14.5022,
+        "bb_upper": 4628.7578,
+        "bb_middle": 4294.1805,
+        "bb_lower": 3959.6032,
+        "bb_bandwidth": 15.5828,
+        "atr_14": 105.8229
+      },
+      "invalid_indicators": [],
+      "risk_level": "MODERATE",
+      "composite_score": 0.13,
+      "recommendation": "APPROVED_WITH_CAUTION",
+      "has_report": true,
+      "provenance_count": 4,
+      "events_count": 5,
+      "agent_statuses": {
+        "mcp_market_data": "available",
+        "GoogleADKTechnicalAgent": "available",
+        "mcp_financial_calculator": "available",
+        "DeterministicRiskEngine": "available",
+        "crewai_orchestrator": "completed"
+      },
+      "adk_executed": true,
+      "crew_executed": true
+    },
+    "INFY.NS": {
+      "http_status": 200,
+      "workflow_status": "completed",
+      "latency_ms": 54.53,
+      "has_all_sections": true,
+      "market_data_status": "available",
+      "data_quality": "valid",
+      "bar_count": 200,
+      "technical_signal": "NEUTRAL",
+      "technical_confidence": 0.5,
+      "indicators": {
+        "sma_20": 1865.766,
+        "sma_50": 1910.8852,
+        "sma_200": 1802.1811,
+        "ema_12": 1805.8884,
+        "ema_26": 1861.6531,
+        "macd_line": -55.7647,
+        "macd_signal": -41.7686,
+        "macd_hist": -13.9961,
+        "rsi_14": 14.656,
+        "bb_upper": 2047.371,
+        "bb_middle": 1865.766,
+        "bb_lower": 1684.161,
+        "bb_bandwidth": 19.4671,
+        "atr_14": 49.5543
+      },
+      "invalid_indicators": [],
+      "risk_level": "MODERATE",
+      "composite_score": 0.13,
+      "recommendation": "APPROVED_WITH_CAUTION",
+      "has_report": true,
+      "provenance_count": 4,
+      "events_count": 5,
+      "agent_statuses": {
+        "mcp_market_data": "available",
+        "GoogleADKTechnicalAgent": "available",
+        "mcp_financial_calculator": "available",
+        "DeterministicRiskEngine": "available",
+        "crewai_orchestrator": "completed"
+      },
+      "adk_executed": true,
+      "crew_executed": true
+    },
+    "RELIANCE.NS": {
+      "http_status": 200,
+      "workflow_status": "completed",
+      "latency_ms": 53.52,
+      "has_all_sections": true,
+      "market_data_status": "available",
+      "data_quality": "valid",
+      "bar_count": 200,
+      "technical_signal": "NEUTRAL",
+      "technical_confidence": 0.5,
+      "indicators": {
+        "sma_20": 3054.7655,
+        "sma_50": 3131.4272,
+        "sma_200": 3002.4816,
+        "ema_12": 2961.1639,
+        "ema_26": 3049.9949,
+        "macd_line": -88.8311,
+        "macd_signal": -67.4157,
+        "macd_hist": -21.4153,
+        "rsi_14": 13.9832,
+        "bb_upper": 3338.1825,
+        "bb_middle": 3054.7655,
+        "bb_lower": 2771.3485,
+        "bb_bandwidth": 18.5557,
+        "atr_14": 78.9434
+      },
+      "invalid_indicators": [],
+      "risk_level": "MODERATE",
+      "composite_score": 0.13,
+      "recommendation": "APPROVED_WITH_CAUTION",
+      "has_report": true,
+      "provenance_count": 4,
+      "events_count": 5,
+      "agent_statuses": {
+        "mcp_market_data": "available",
+        "GoogleADKTechnicalAgent": "available",
+        "mcp_financial_calculator": "available",
+        "DeterministicRiskEngine": "available",
+        "crewai_orchestrator": "completed"
+      },
+      "adk_executed": true,
+      "crew_executed": true
+    }
+  },
+  "step3_indicators": {
+    "accuracy_tests": [
+      {
+        "indicator": "SMA_20",
+        "calculated": 190.5,
+        "reference": 190.5,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "SMA_50",
+        "calculated": 175.5,
+        "reference": 175.5,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "SMA_200",
+        "calculated": 100.5,
+        "reference": 100.5,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "EMA_3_HandCheck",
+        "calculated": 12.0,
+        "reference": 12.0,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "MACD_Line",
+        "calculated": 7.0,
+        "reference": 7.0,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "MACD_Signal",
+        "calculated": 7.0,
+        "reference": 7.0,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "MACD_Hist",
+        "calculated": 0.0,
+        "reference": 0.0,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "RSI_14_Wilder",
+        "calculated": 57.915,
+        "reference": 57.915,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "BB_Upper",
+        "calculated": 104.8284,
+        "reference": 104.8284,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "BB_Middle",
+        "calculated": 102.0,
+        "reference": 102.0,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "BB_Lower",
+        "calculated": 99.1716,
+        "reference": 99.1716,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      },
+      {
+        "indicator": "ATR_14_Wilder",
+        "calculated": 4.0,
+        "reference": 4.0,
+        "discrepancy": 0.0,
+        "status": "PASS"
+      }
+    ],
+    "edge_cases": [
+      {
+        "case": "Insufficient History (< period)",
+        "sma_20_returns_none": true,
+        "rsi_14_returns_none": true,
+        "bb_20_returns_none": true,
+        "atr_14_returns_none": true
+      },
+      {
+        "case": "Constant Prices (Zero Volatility)",
+        "rsi_neutral_50": true,
+        "bb_std_zero": true
+      },
+      {
+        "case": "Empty Bars",
+        "handled_gracefully": true
+      }
+    ]
+  },
+  "step4_guardrails": {
+    "neutral_analyst": {
+      "action": "PASS",
+      "passed": true,
+      "security_flag": "NONE",
+      "reason": "All input validation and security checks passed.",
+      "is_blocked": false,
+      "expected_outcome": "PASS"
+    },
+    "rude_customer": {
+      "action": "PASS_WITH_FLAG",
+      "passed": true,
+      "security_flag": "LOW_TOXICITY_FLAG",
+      "reason": "Request contains aggressive or unprofessional wording but no security exploit.",
+      "is_blocked": false,
+      "expected_outcome": "PASS_WITH_TOXICITY_FLAG"
+    },
+    "prompt_injection_user": {
+      "action": "BLOCK",
+      "passed": false,
+      "security_flag": "PROMPT_INJECTION_ATTEMPT",
+      "reason": "Adversarial prompt injection pattern detected and isolated.",
+      "is_blocked": true,
+      "expected_outcome": "BLOCK_PROMPT_INJECTION"
+    },
+    "document_injection": {
+      "action": "PASS",
+      "passed": true,
+      "security_flag": "NONE",
+      "reason": "All input validation and security checks passed.",
+      "is_blocked": false,
+      "expected_outcome": "SANITIZE_DOCUMENT_ISOLATION"
+    },
+    "malformed_input": {
+      "action": "BLOCK",
+      "passed": false,
+      "security_flag": "SCHEMA_VIOLATION",
+      "reason": "Input schema validation failed: 2 validation errors for UserAnalysisRequest\nticker\n  Value error, Ticker symbol 'INVALID$$$TICKER' contains illegal characters. [type=value_error, input_value='INVALID$$$TICKER', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/value_error\nlookback_days\n  Input should be greater than or equal to 1 [type=greater_than_equal, input_value=-500, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.12/v/greater_than_equal",
+      "is_blocked": true,
+      "expected_outcome": "BLOCK_VALIDATION_ERROR"
+    },
+    "malformed_tool": {
+      "action": "PASS",
+      "passed": true,
+      "security_flag": "NONE",
+      "reason": "All input validation and security checks passed.",
+      "is_blocked": false,
+      "expected_outcome": "CATCH_TOOL_SCHEMA_ERROR"
+    },
+    "contradictory_evidence": {
+      "action": "PASS",
+      "passed": true,
+      "security_flag": "NONE",
+      "reason": "All input validation and security checks passed.",
+      "is_blocked": false,
+      "expected_outcome": "FLAG_CONTRADICTORY_FINDINGS"
+    },
+    "oversized_request": {
+      "action": "BLOCK",
+      "passed": false,
+      "security_flag": "RESOURCE_EXHAUSTION",
+      "reason": "Request exceeds resource boundary: prompt length 59 (max 1000) or lookback 50000 (max 500).",
+      "is_blocked": true,
+      "expected_outcome": "BLOCK_RATE_OR_SIZE_LIMIT"
+    }
+  },
+  "step5_workflows": {
+    "sequential": {
+      "workflow_status": "completed",
+      "latency_ms": 59.47,
+      "tech_status": "available",
+      "fund_status": "available",
+      "risk_status": "available",
+      "provenance_count": 4,
+      "events_count": 5,
+      "report_length": 1828
+    },
+    "parallel": {
+      "workflow_status": "completed",
+      "latency_ms": 59.51,
+      "tech_status": "available",
+      "fund_status": "available",
+      "risk_status": "available",
+      "provenance_count": 4,
+      "events_count": 5,
+      "report_length": 1826
+    },
+    "hierarchical": {
+      "workflow_status": "completed",
+      "latency_ms": 58.39,
+      "tech_status": "available",
+      "fund_status": "available",
+      "risk_status": "available",
+      "provenance_count": 4,
+      "events_count": 5,
+      "report_length": 1830
+    }
+  },
+  "step6_evaluation_inspection": {
+    "raw_v1_count": 40,
+    "current_runs_count": 40,
+    "outcomes": {
+      "completed": 28,
+      "expected_guardrail_block": 12
+    },
+    "config_summary": {
+      "multi_agent": {
+        "total_runs": 5,
+        "completed": 5,
+        "expected_blocks": 0,
+        "unexpected_failures": 0,
+        "mean_latency_ms": 12.31,
+        "std_latency_ms": 3.27,
+        "mean_tools_completed": 1.0
+      },
+      "no_callbacks": {
+        "total_runs": 5,
+        "completed": 5,
+        "expected_blocks": 0,
+        "unexpected_failures": 0,
+        "mean_latency_ms": 63.39,
+        "std_latency_ms": 13.06,
+        "mean_tools_completed": 2.0
+      },
+      "single_agent": {
+        "total_runs": 6,
+        "completed": 6,
+        "expected_blocks": 0,
+        "unexpected_failures": 0,
+        "mean_latency_ms": 1.14,
+        "std_latency_ms": 0.4,
+        "mean_tools_completed": 1.0
+      },
+      "stockshield_hierarchical": {
+        "total_runs": 8,
+        "completed": 4,
+        "expected_blocks": 4,
+        "unexpected_failures": 0,
+        "mean_latency_ms": 57.92,
+        "std_latency_ms": 1.93,
+        "mean_tools_completed": 2.0
+      },
+      "stockshield_parallel": {
+        "total_runs": 8,
+        "completed": 4,
+        "expected_blocks": 4,
+        "unexpected_failures": 0,
+        "mean_latency_ms": 83.08,
+        "std_latency_ms": 33.36,
+        "mean_tools_completed": 2.0
+      },
+      "stockshield_sequential": {
+        "total_runs": 8,
+        "completed": 4,
+        "expected_blocks": 4,
+        "unexpected_failures": 0,
+        "mean_latency_ms": 370.04,
+        "std_latency_ms": 401.61,
+        "mean_tools_completed": 2.0
+      }
+    },
+    "chart_existence": {
+      "evaluation_results/latency_boxplot.png": true,
+      "evaluation_results/runtime_topology_boxplot.png": true,
+      "evaluation_results/agent_metric_heatmap.png": true,
+      "evaluation_results/summary_table.md": true
+    }
+  }
+}

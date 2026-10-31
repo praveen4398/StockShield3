@@ -5,9 +5,9 @@
 [![Google ADK](https://img.shields.io/badge/Google_ADK-2.13.0-4285F4.svg)](https://pypi.org/project/google-adk/)
 [![CrewAI](https://img.shields.io/badge/CrewAI-1.15.33-FF4B4B.svg)](https://crewai.com)
 [![MCP](https://img.shields.io/badge/MCP-1.30.0-8A2BE2.svg)](https://modelcontextprotocol.io)
-[![Tests](https://img.shields.io/badge/Tests-33%20Passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-54%20Passed-success.svg)]()
 
-> **Phase 2 Academic Prototype:** Clean-room, multi-agent financial intelligence and deterministic risk governance system for Indian equities (NSE: `TCS.NS`, `INFY.NS`, `RELIANCE.NS`).
+> **Phase 2 Academic Prototype & Dynamic NSE Engine:** Clean-room, multi-agent financial intelligence and deterministic risk governance system for Indian equities. Supports offline institutional fixtures (`TCS.NS`, `INFY.NS`, `RELIANCE.NS`) as well as dynamic real-time market analysis for all valid NSE/BSE tickers (`HDFCBANK.NS`, `WIPRO.NS`, `ICICIBANK.NS`, `SBIN.NS`, `ITC.NS`, etc.) via Yahoo Finance.
 
 ---
 
@@ -78,18 +78,30 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 3.2 Run Automated Tests (100% Offline)
+### 3.2 Run Automated Tests (Unit, Integration & Live Suites)
 ```powershell
 $env:PYTHONPATH="src"
 .\.venv\Scripts\pytest.exe -v
 ```
-*Result: 33 passed in ~17.8s (including live stdio MCP client session and A2A card resolver).*
+*Result: 54 passed in ~33s (including offline fixtures, live stdio MCP client session, A2A card resolver, and live Yahoo Finance retrieval).*
 
 ### 3.3 Run Code Linting & Formatting
 ```powershell
 .\.venv\Scripts\ruff.exe check src tests
 ```
 *Result: All checks passed!*
+
+### 3.4 Dynamic Market Data Provider Modes
+StockShield 2.0 supports three market-data provider modes via `MarketDataProvider` and the MCP tool `get_historical_market_data`:
+
+| Mode | Behavior | Source Lineage | Use Case |
+|---|---|---|---|
+| `auto` (default) | Uses offline fixture if `data/fixtures/{ticker}.json` exists; otherwise fetches live from Yahoo Finance. | `fixture` or `yahoo_finance` | General development and API usage. |
+| `fixture` | Strictly loads from local fixture JSON. Never accesses the network. Rejects un-whitelisted tickers. | `fixture` | 100% deterministic academic evaluations and offline testing. |
+| `live` | Directly retrieves 2-year OHLCV and fundamental ratios via `yfinance`. | `yahoo_finance` | Production dynamic equity analysis for any NSE ticker (e.g. `HDFCBANK.NS`, `WIPRO.NS`). |
+
+**In-Memory Caching:** Live requests are cached in-memory with a 30-minute TTL to prevent rate-limiting and duplicate network calls.
+**No Data Fabrication:** Banking and non-reporting equities omit missing fundamental metrics (such as Debt-to-Equity or Current Ratio) with explicit `unavailable` status rather than dummy defaults.
 
 ---
 
@@ -146,12 +158,14 @@ $env:PYTHONPATH="src"
 - **Analysis Execution:** `POST http://localhost:8000/analyze`
   ```json
   {
-    "ticker": "TCS.NS",
-    "user_prompt": "Run full technical momentum and risk review.",
+    "ticker": "HDFCBANK.NS",
+    "user_prompt": "Analyze HDFC Bank technical indicators and solvency.",
     "lookback_days": 200,
-    "workflow_mode": "sequential"
+    "workflow_mode": "sequential",
+    "provider_mode": "auto"
   }
   ```
+  *(Works with any valid NSE/BSE ticker e.g. `TCS.NS`, `INFY.NS`, `RELIANCE.NS`, `WIPRO.NS`, `ICICIBANK.NS`, `SBIN.NS`, `ITC.NS`)*
 
 ---
 

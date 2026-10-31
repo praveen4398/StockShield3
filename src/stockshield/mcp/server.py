@@ -26,7 +26,7 @@ _calculator = FinancialEvidenceCalculator()
 def get_historical_market_data(
     ticker: str,
     lookback_days: int = 200,
-    provider_mode: str = "fixture",
+    provider_mode: str = "auto",
 ) -> Dict[str, Any]:
     """Retrieve validated historical OHLCV market data for a given ticker."""
     req = MarketDataRequest(
