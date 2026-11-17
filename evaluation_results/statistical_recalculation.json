@@ -1,0 +1,264 @@
+{
+  "audit_metadata": {
+    "experiment_id": "exp_40run_20261117_102728",
+    "audit_timestamp_utc": "2026-11-17T10:44:37.084623+00:00",
+    "audit_scope": "Complete independent statistical recalculation of all 40 full workflow runs, 5 Gemini post-hoc evaluation attempts, and 8 security benchmark tests.",
+    "data_source": "evaluation_results/runs.jsonl filtered by experiment_id"
+  },
+  "runtime_performance_by_architecture": {
+    "sequential_with_callbacks": {
+      "n": 12,
+      "mean_ms": 1125.23,
+      "std_ms": 342.54,
+      "sem_ms": 98.88,
+      "median_ms": 1118.17,
+      "q25_ms": 866.93,
+      "q75_ms": 1213.66,
+      "iqr_ms": 346.72,
+      "min_ms": 728.24,
+      "max_ms": 1930.68
+    },
+    "parallel_with_callbacks": {
+      "n": 12,
+      "mean_ms": 1114.38,
+      "std_ms": 338.24,
+      "sem_ms": 97.64,
+      "median_ms": 1088.88,
+      "q25_ms": 865.21,
+      "q75_ms": 1182.52,
+      "iqr_ms": 317.32,
+      "min_ms": 713.19,
+      "max_ms": 1786.94
+    },
+    "hierarchical_with_callbacks": {
+      "n": 12,
+      "mean_ms": 1282.31,
+      "std_ms": 400.08,
+      "sem_ms": 115.49,
+      "median_ms": 1211.57,
+      "q25_ms": 1040.98,
+      "q75_ms": 1395.49,
+      "iqr_ms": 354.51,
+      "min_ms": 798.58,
+      "max_ms": 2036.19
+    },
+    "sequential_without_callbacks_ablation": {
+      "n": 4,
+      "mean_ms": 1261.53,
+      "std_ms": 275.06,
+      "sem_ms": 137.53,
+      "median_ms": 1325.74,
+      "q25_ms": 1138.01,
+      "q75_ms": 1449.26,
+      "iqr_ms": 311.26,
+      "min_ms": 890.44,
+      "max_ms": 1504.17
+    }
+  },
+  "inferential_hypothesis_tests": {
+    "sequential_vs_parallel": {
+      "welch_two_sample_test": {
+        "t_statistic": 0.0781,
+        "degrees_of_freedom": 22.0,
+        "p_value": 0.9384,
+        "statistically_significant_at_alpha_0_05": false
+      },
+      "paired_t_test_matched_12_cases": {
+        "t_statistic": 0.2271,
+        "degrees_of_freedom": 11,
+        "p_value": 0.8245,
+        "mean_difference_ms": 10.86,
+        "ci_95_pct_ms": [
+          -94.37,
+          116.09
+        ],
+        "statistically_significant_at_alpha_0_05": false
+      },
+      "cohens_d": 0.0319,
+      "academic_conclusion": "Differences between Sequential and Parallel workflows are not statistically distinguishable (Welch p=0.9384, Paired p=0.8245) in local CPU-bound fixture execution where I/O network wait is zero."
+    },
+    "sequential_vs_hierarchical": {
+      "welch_two_sample_test": {
+        "t_statistic": -1.0331,
+        "degrees_of_freedom": 21.49,
+        "p_value": 0.313,
+        "statistically_significant_at_alpha_0_05": false
+      },
+      "paired_t_test_matched_12_cases": {
+        "t_statistic": -3.0459,
+        "degrees_of_freedom": 11,
+        "p_value": 0.0111,
+        "mean_difference_ms": -157.08,
+        "ci_95_pct_ms": [
+          -270.58,
+          -43.57
+        ],
+        "statistically_significant_at_alpha_0_05": true
+      },
+      "cohens_d": -0.4218,
+      "academic_conclusion": "Hierarchical coordination incurs a statistically significant latency overhead of 157.08 ms (paired t=-3.0459, p=0.0111, 95% CI [-270.58 ms, -43.57 ms]), representing a ~13.96% coordination cost for meta-supervisor planning and synthesis."
+    },
+    "callback_ablation_sequential_with_vs_without": {
+      "sample_size_matched_cases": 4,
+      "paired_cases_detail": [
+        {
+          "case_id": "C01",
+          "latency_with_callbacks_ms": 1211.13,
+          "latency_without_callbacks_ms": 890.44,
+          "delta_ms": 320.69
+        },
+        {
+          "case_id": "C05",
+          "latency_with_callbacks_ms": 1123.45,
+          "latency_without_callbacks_ms": 1220.53,
+          "delta_ms": -97.08
+        },
+        {
+          "case_id": "C09",
+          "latency_with_callbacks_ms": 1112.89,
+          "latency_without_callbacks_ms": 1430.96,
+          "delta_ms": -318.07
+        },
+        {
+          "case_id": "C10",
+          "latency_with_callbacks_ms": 1221.23,
+          "latency_without_callbacks_ms": 1504.17,
+          "delta_ms": -282.94
+        }
+      ],
+      "paired_t_test": {
+        "t_statistic": -0.6436,
+        "degrees_of_freedom": 3,
+        "p_value": 0.5656,
+        "mean_difference_ms": -94.35,
+        "ci_95_pct_ms": [
+          -560.88,
+          372.18
+        ],
+        "statistically_significant_at_alpha_0_05": false
+      },
+      "cohens_d": -0.475,
+      "academic_conclusion": "Event bus callback execution does not introduce statistically significant latency overhead (paired t=-0.6436, p=0.5656, 95% CI [-560.88 ms, +372.18 ms]). In-memory event dispatch latency is negligible relative to execution variance."
+    }
+  },
+  "terminal_drawdown_p5_pct_audited": {
+    "metric_definition": "5th-percentile simulated terminal price drawdown from S0 under Geometric Brownian Motion Monte Carlo simulation: (S0 - ST_P5) / S0 * 100.0",
+    "terminology_correction": "Replaces incorrect labels VaR 95% and CVaR. Terminal Drawdown (P5 %) measures terminal simulated path distribution drawdown, not multi-period portfolio Value at Risk or Conditional Value at Risk.",
+    "overall_descriptive_stats": {
+      "count": 40,
+      "mean_pct": 8.06,
+      "std_pct": 3.19,
+      "min_pct": 3.98,
+      "max_pct": 12.76
+    },
+    "by_analysis_time_horizon": {
+      "long_term": {
+        "count": 14,
+        "mean_pct": 10.71,
+        "std_pct": 2.2,
+        "min_pct": 8.0,
+        "max_pct": 12.76
+      },
+      "mid_term": {
+        "count": 13,
+        "mean_pct": 8.79,
+        "std_pct": 2.23,
+        "min_pct": 5.83,
+        "max_pct": 10.95
+      },
+      "short_term": {
+        "count": 13,
+        "mean_pct": 4.49,
+        "std_pct": 0.43,
+        "min_pct": 3.98,
+        "max_pct": 4.93
+      }
+    },
+    "by_predictive_forecast_horizon": {
+      "1_month": {
+        "count": 7,
+        "mean_pct": 4.51,
+        "std_pct": 0.38,
+        "min_pct": 4.21,
+        "max_pct": 4.92
+      },
+      "1_year": {
+        "count": 11,
+        "mean_pct": 10.46,
+        "std_pct": 2.13,
+        "min_pct": 8.0,
+        "max_pct": 12.76
+      },
+      "2_years": {
+        "count": 6,
+        "mean_pct": 11.15,
+        "std_pct": 1.77,
+        "min_pct": 9.53,
+        "max_pct": 12.76
+      },
+      "3_months": {
+        "count": 6,
+        "mean_pct": 4.46,
+        "std_pct": 0.52,
+        "min_pct": 3.98,
+        "max_pct": 4.93
+      },
+      "6_months": {
+        "count": 10,
+        "mean_pct": 8.23,
+        "std_pct": 2.26,
+        "min_pct": 5.83,
+        "max_pct": 10.95
+      }
+    },
+    "by_ticker": {
+      "INFY.NS": {
+        "count": 13,
+        "mean_pct": 7.59,
+        "std_pct": 2.47,
+        "min_pct": 4.92,
+        "max_pct": 10.66
+      },
+      "RELIANCE.NS": {
+        "count": 13,
+        "mean_pct": 10.54,
+        "std_pct": 3.28,
+        "min_pct": 4.93,
+        "max_pct": 12.76
+      },
+      "TCS.NS": {
+        "count": 14,
+        "mean_pct": 6.21,
+        "std_pct": 2.19,
+        "min_pct": 3.98,
+        "max_pct": 8.7
+      }
+    },
+    "methodological_scope_limitation": "The observed empirical monotonic increase across horizons reflects the mathematical dispersion of Geometric Brownian Motion diffusion (sigma * sqrt(T)), and should not be construed as a universal law or guarantee of future real-world stock market price behavior."
+  },
+  "forecasting_evaluation_summary": {
+    "directional_accuracy_mean_pct": 91.0,
+    "directional_accuracy_std_pct": 21.7,
+    "rmse_mean": 13.97,
+    "mae_mean": 11.19,
+    "model_selection_counts": {
+      "ARIMA": 30,
+      "LightGBM": 10
+    }
+  },
+  "gemini_judge_accounting_audit": {
+    "total_workflow_runs": 40,
+    "phase_1_inline_evaluations_skipped": 35,
+    "phase_2_post_hoc_evaluations_attempted": 5,
+    "phase_2_post_hoc_evaluations_succeeded": 0,
+    "phase_2_post_hoc_evaluations_failed": 5,
+    "failure_root_cause": "HTTP 429 RESOURCE_EXHAUSTED: Google Gemini API Free Tier daily limit of 20 requests per day per project per model was exceeded on model gemini-3.8-flash.",
+    "reconciliation_of_judge_scores_csv": "The 40 rows in judge_scores.csv reflect an audit LEFT JOIN against the 40 workflow runs in runs table. Zero rows contain successful judge scores; 35 were skipped in Phase 1 by design, and 5 failed with rate-limiting during Phase 2 post-hoc evaluation."
+  },
+  "security_benchmark_audit": {
+    "total_adversarial_tests": 8,
+    "passed_tests": 8,
+    "pass_rate_pct": 100.0,
+    "scope_and_limitation": "Guardrails engine demonstrated 100% adherence against the 8 predefined adversarial vectors (prompt injection, schema invalidation, negative parameters, resource exhaustion, universe constraints, toxic tone tolerance, document isolation). This verifies the efficacy of the test battery, not absolute immunity to all potential adversarial prompts."
+  }
+}

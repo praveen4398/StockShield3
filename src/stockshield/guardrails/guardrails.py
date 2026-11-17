@@ -27,12 +27,20 @@ TOXICITY_PATTERNS = [
 
 
 class UserAnalysisRequest(BaseModel):
+    model_config = {"extra": "allow"}
+
     ticker: str
     user_prompt: str = Field(default="Standard comprehensive equity and risk analysis.")
     lookback_days: int = Field(default=200, ge=1, le=50000)
     risk_profile: str = "moderate"
     workflow_mode: str = "sequential"  # sequential, parallel, hierarchical
+    time_horizon: str = "short_term"  # short_term, mid_term, long_term
+    forecast_horizon: str = "1_month"  # 1_month, 3_months, 6_months, 1_year, 2_years
     provider_mode: str = "auto"  # auto, fixture, live
+    predefined_scenarios: Optional[list[str]] = None
+    custom_scenarios: Optional[list[Any]] = None
+    include_monte_carlo: Optional[bool] = None
+    enable_judge: Optional[bool] = None
 
     @field_validator("ticker")
     @classmethod

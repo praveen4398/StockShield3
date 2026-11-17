@@ -19,3 +19,9 @@ services:
         value: "true"
       - key: ENABLE_GUARDRAILS
         value: "true"
+      - key: LLM_JUDGE_ENABLED
+        value: "true"
+      - key: GEMINI_JUDGE_MODEL
+        value: "gemini-3.8-flash"
+      - key: GEMINI_API_KEY
+        sync: false

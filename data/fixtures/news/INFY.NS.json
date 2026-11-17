@@ -1,0 +1,42 @@
+{
+  "ticker": "INFY.NS",
+  "company_name": "Infosys",
+  "as_of_date": "2026-10-29",
+  "articles": [
+    {
+      "title": "Infosys raises lower end of annual revenue growth guidance following broad-based deal momentum - LiveMint",
+      "source": "LiveMint",
+      "published_date": "2026-10-26T10:15:00Z",
+      "url": "https://news.google.com/articles/infy-guidance-revision-q2-2026",
+      "description": "Infosys reported steady second-quarter revenue growth and upgraded its full-year guidance on the back of resilient large deal total contract value."
+    },
+    {
+      "title": "Infosys expands generative AI suite Topaz with enterprise clients across automotive and healthcare - Economic Times",
+      "source": "Economic Times",
+      "published_date": "2026-10-21T13:30:00Z",
+      "url": "https://news.google.com/articles/infosys-topaz-ai-expansion-2026",
+      "description": "Infosys announced over 50 new active engagements utilizing its Topaz generative AI platform for automated workflow and code modernization."
+    },
+    {
+      "title": "Infosys signs $850 million digital services renewal with European telecommunications leader - Business Standard",
+      "source": "Business Standard",
+      "published_date": "2026-10-17T08:45:00Z",
+      "url": "https://news.google.com/articles/infosys-telecom-deal-renewal-2026",
+      "description": "The five-year strategic collaboration focuses on next-generation network architecture and cloud operations."
+    },
+    {
+      "title": "Infosys operating margins expand 40 bps sequentially to 21.1% amid operational efficiency gains - Moneycontrol",
+      "source": "Moneycontrol",
+      "published_date": "2026-10-14T15:20:00Z",
+      "url": "https://news.google.com/articles/infosys-operating-margins-expansion-2026",
+      "description": "Infosys demonstrated effective realization of value from its Project Maximus margin improvement initiative across onsite and offshore delivery."
+    },
+    {
+      "title": "Infosys voluntary attrition drops to 12.5%, hiring momentum picks up for niche engineering skills - NDTV Profit",
+      "source": "NDTV Profit",
+      "published_date": "2026-10-10T12:00:00Z",
+      "url": "https://news.google.com/articles/infosys-attrition-hiring-trends-2026",
+      "description": "Attrition levels stabilized across delivery centers as employee retention initiatives and internal development programs yielded favorable outcomes."
+    }
+  ]
+}

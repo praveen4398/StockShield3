@@ -127,13 +127,14 @@ class GoogleADKTechnicalAgent:
             return {"status": "unavailable", "duration_ms": duration_ms}
 
         # Convert bars to dicts
+        time_horizon = getattr(state, "time_horizon", "short_term")
         raw_bars = [b.model_dump() for b in market_data.bars]
-        indicators, signal, confidence, warnings = compute_all_indicators(raw_bars)
+        indicators, signal, confidence, warnings = compute_all_indicators(raw_bars, time_horizon=time_horizon)
 
-        # Build diagnostic summary
+        # Build diagnostic summary tailored to investment horizon
         latest_bar = raw_bars[-1]
         summary = (
-            f"[Google ADK TechnicalAgent / Runner Session {session_id}] "
+            f"[Google ADK TechnicalAgent / Runner Session {session_id} / {time_horizon.upper().replace('_', ' ')}] "
             f"Review for {state.ticker}: Close={latest_bar.get('close')} INR, "
             f"SMA-20={indicators.get('sma_20')}, SMA-50={indicators.get('sma_50')}, "
             f"SMA-200={indicators.get('sma_200')}, RSI-14={indicators.get('rsi_14')}, "

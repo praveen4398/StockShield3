@@ -31,6 +31,8 @@ class DeterministicRiskEngine:
         market_data = state.market_data
         tech = state.technical_findings
         fund = state.fundamental_findings
+        news = state.news_sentiment
+        forecasting = state.forecasting
 
         checks: List[Dict[str, Any]] = []
         warnings: List[str] = []
@@ -61,7 +63,7 @@ class DeterministicRiskEngine:
                     "message": f"Moderate data volume: {bar_count} bars available. SMA-200 lookback unavailable.",
                 }
             )
-            warnings.append(f"Lookback limited to {bar_count} bars; 200-day trend context unavailable.")
+            warnings.append(f"Lookback limited to {bar_count} bars; 200-bar trend context unavailable.")
             risk_scores.append(0.3)
         else:
             checks.append(
@@ -252,9 +254,281 @@ class DeterministicRiskEngine:
                     risk_scores.append(0.05)
 
         # -------------------------------------------------------------
+        # 6. News & Media Sentiment Risk Analysis
+        # -------------------------------------------------------------
+        if news.status == FindingStatus.AVAILABLE:
+            if news.total_articles == 0:
+                checks.append(
+                    {
+                        "name": "news_sentiment_risk",
+                        "passed": True,
+                        "score": 0.2,
+                        "message": "Zero verified news articles found; neutral media baseline applied.",
+                    }
+                )
+                warnings.append("Risk evaluated with zero verified news media coverage.")
+                risk_scores.append(0.2)
+            else:
+                # Check for critical regulatory, fraud, or legal scrutiny
+                combined_adverse = " ".join(news.negative_events + news.risk_observations).lower()
+                has_regulatory_issue = any(
+                    term in combined_adverse
+                    for term in ["sebi", "rbi", "probe", "investigation", "penalty", "fraud", "court", "cbi", "ed raid"]
+                )
+
+                if has_regulatory_issue:
+                    checks.append(
+                        {
+                            "name": "news_sentiment_risk",
+                            "passed": False,
+                            "score": 0.8,
+                            "message": "Severe corporate governance, regulatory scrutiny, or legal inquiry detected in news media.",
+                        }
+                    )
+                    reasons.append("Active regulatory scrutiny or compliance proceeding identified in recent media coverage.")
+                    risk_scores.append(0.8)
+                elif news.overall_sentiment == "NEGATIVE" or news.sentiment_score <= -0.25:
+                    checks.append(
+                        {
+                            "name": "news_sentiment_risk",
+                            "passed": False,
+                            "score": 0.65,
+                            "message": (
+                                f"Elevated negative media coverage ({news.negative_count}/{news.total_articles} articles negative, "
+                                f"score {news.sentiment_score:+.2f})."
+                            ),
+                        }
+                    )
+                    reasons.append(f"Adverse media sentiment indicates near-term headline risk ({news.negative_count} negative articles).")
+                    warnings.append(f"Repeated negative media coverage observed (sentiment score {news.sentiment_score:+.2f}).")
+                    risk_scores.append(0.65)
+                elif news.overall_sentiment == "POSITIVE" and news.sentiment_score >= 0.25:
+                    checks.append(
+                        {
+                            "name": "news_sentiment_risk",
+                            "passed": True,
+                            "score": 0.05,
+                            "message": (
+                                f"Favorable media consensus ({news.positive_count}/{news.total_articles} articles positive, "
+                                f"score {news.sentiment_score:+.2f})."
+                            ),
+                        }
+                    )
+                    reasons.append(f"Supportive media sentiment ({news.positive_count} positive reports) provides positive institutional context.")
+                    risk_scores.append(0.05)
+                else:
+                    # Neutral or mixed
+                    checks.append(
+                        {
+                            "name": "news_sentiment_risk",
+                            "passed": True,
+                            "score": 0.2,
+                            "message": (
+                                f"Balanced/neutral media sentiment ({news.positive_count} pos, {news.neutral_count} neu, "
+                                f"{news.negative_count} neg, score {news.sentiment_score:+.2f})."
+                            ),
+                        }
+                    )
+                    risk_scores.append(0.2)
+        elif news.status == FindingStatus.UNAVAILABLE:
+            checks.append(
+                {
+                    "name": "news_sentiment_risk",
+                    "passed": True,
+                    "score": 0.25,
+                    "message": "News sentiment feed unavailable; evaluating risk without media sentiment.",
+                }
+            )
+            warnings.append("Risk assessment conducted without media sentiment corroboration (news feed unavailable).")
+            risk_scores.append(0.25)
+        else:
+            # PENDING or FAILED
+            checks.append(
+                {
+                    "name": "news_sentiment_risk",
+                    "passed": True,
+                    "score": 0.25,
+                    "message": f"News sentiment status is {news.status.value}; neutral default applied.",
+                }
+            )
+            warnings.append(f"Media sentiment not available (status: {news.status.value}).")
+            risk_scores.append(0.25)
+
+        # -------------------------------------------------------------
+        # 7. Predictive Price Forecasting Risk Analysis
+        # -------------------------------------------------------------
+        if forecasting.status == FindingStatus.AVAILABLE:
+            best = forecasting.best_model
+            if best and best.forecasts:
+                # Maximum horizon forecast point (10th trading session)
+                p10 = next((p for p in best.forecasts if p.step == 10), best.forecasts[-1])
+                pct_change = p10.pct_change
+
+                if pct_change <= -8.0:
+                    checks.append(
+                        {
+                            "name": "predictive_forecast_risk",
+                            "passed": False,
+                            "score": 0.75,
+                            "message": (
+                                f"Severe downside forecast: {best.model_name} predicts {pct_change:.1f}% "
+                                f"decline over 10 trading sessions (target: {p10.predicted_price:.2f})."
+                            ),
+                        }
+                    )
+                    reasons.append(
+                        f"Predictive quantitative forecast ({best.model_name}) indicates severe downward trajectory ({pct_change:.1f}%)."
+                    )
+                    warnings.append(f"Model {best.model_name} projects severe downside of {pct_change:.1f}% over {p10.step} sessions.")
+                    risk_scores.append(0.75)
+                elif pct_change <= -3.0:
+                    checks.append(
+                        {
+                            "name": "predictive_forecast_risk",
+                            "passed": True,
+                            "score": 0.50,
+                            "message": (
+                                f"Moderate downside forecast: {best.model_name} predicts {pct_change:.1f}% "
+                                f"contraction over {p10.step} trading sessions."
+                            ),
+                        }
+                    )
+                    warnings.append(f"Forward projection indicates moderate downward pressure ({pct_change:.1f}% over {p10.step} sessions).")
+                    risk_scores.append(0.50)
+                elif pct_change >= 3.0:
+                    checks.append(
+                        {
+                            "name": "predictive_forecast_risk",
+                            "passed": True,
+                            "score": 0.05,
+                            "message": (
+                                f"Supportive upward forecast: {best.model_name} predicts +{pct_change:.1f}% "
+                                f"gain over 10 trading sessions."
+                            ),
+                        }
+                    )
+                    reasons.append(
+                        f"Quantitative forecast ({best.model_name}) projects supportive upward movement (+{pct_change:.1f}%)."
+                    )
+                    risk_scores.append(0.05)
+                else:
+                    checks.append(
+                        {
+                            "name": "predictive_forecast_risk",
+                            "passed": True,
+                            "score": 0.15,
+                            "message": (
+                                f"Neutral forward trajectory: {best.model_name} projects modest drift "
+                                f"({pct_change:+.1f}% over 10 sessions)."
+                            ),
+                        }
+                    )
+                    risk_scores.append(0.15)
+
+                # Check model divergence across candidate models
+                if forecasting.model_divergence_pct > 6.0:
+                    warnings.append(
+                        f"High forecast divergence ({forecasting.model_divergence_pct:.1f}%): "
+                        "Candidate models disagree significantly on forward path."
+                    )
+
+                # Check validation directional accuracy of best model
+                if best.validation_metrics.directional_accuracy < 45.0:
+                    warnings.append(
+                        f"Low validation directional accuracy ({best.validation_metrics.directional_accuracy:.1f}%): "
+                        f"{best.model_name} trend direction carries elevated uncertainty."
+                    )
+            else:
+                checks.append(
+                    {
+                        "name": "predictive_forecast_risk",
+                        "passed": True,
+                        "score": 0.20,
+                        "message": "Forecasting available but no best model forecasts generated; neutral baseline applied.",
+                    }
+                )
+                warnings.append("Forecasting produced no valid candidate model forecasts.")
+                risk_scores.append(0.20)
+        elif forecasting.status == FindingStatus.UNAVAILABLE:
+            checks.append(
+                {
+                    "name": "predictive_forecast_risk",
+                    "passed": True,
+                    "score": 0.20,
+                    "message": "Predictive price forecasting feed unavailable; evaluating risk without forward projections.",
+                }
+            )
+            warnings.append("Risk assessment conducted without predictive forecasting (feed unavailable).")
+            risk_scores.append(0.20)
+        else:
+            checks.append(
+                {
+                    "name": "predictive_forecast_risk",
+                    "passed": True,
+                    "score": 0.20,
+                    "message": f"Predictive forecasting status is {forecasting.status.value}; neutral baseline applied.",
+                }
+            )
+            warnings.append(f"Predictive forecasting not available (status: {forecasting.status.value}).")
+            risk_scores.append(0.20)
+
+        # -------------------------------------------------------------
+        # 8. Scenario Stress Testing & Tail Hazard Analysis (Gate 8)
+        # -------------------------------------------------------------
+        sim_state = state.scenario_simulation
+        if sim_state.status == FindingStatus.AVAILABLE and sim_state.scenarios:
+            worst = sim_state.worst_case_scenario
+            worst_score = worst.simulated.scenario_risk_score if worst else 0.0
+            worst_name = worst.scenario_name if worst else "None"
+            worst_rec = worst.simulated.scenario_recommendation if worst else "N/A"
+
+            gate8_passed = worst_score < 0.65
+            gate8_msg = (
+                f"Worst-case stress scenario '{worst_name}' yields simulated risk score {worst_score:.3f} ({worst_rec})."
+            )
+
+            if sim_state.scenarios_changing_recommendation:
+                warnings.append(
+                    f"Gate 8 Scenario Stress: {len(sim_state.scenarios_changing_recommendation)} scenario(s) flip baseline recommendation: "
+                    f"{', '.join(sim_state.scenarios_changing_recommendation[:2])}."
+                )
+
+            if worst_score >= 0.65:
+                warnings.append(
+                    f"Gate 8 Tail Hazard: Severe market stress ({worst_name}) escalates simulated risk to {worst_rec}."
+                )
+
+            checks.append(
+                {
+                    "name": "scenario_stress_testing",
+                    "passed": gate8_passed,
+                    "score": round(worst_score, 3),
+                    "message": gate8_msg,
+                    "details": {
+                        "worst_case_scenario": worst_name,
+                        "worst_case_score": worst_score,
+                        "worst_case_recommendation": worst_rec,
+                        "scenarios_flipping_recommendation": sim_state.scenarios_changing_recommendation,
+                        "scenarios_material_risk_increase": sim_state.scenarios_material_risk_increase,
+                    },
+                }
+            )
+        else:
+            checks.append(
+                {
+                    "name": "scenario_stress_testing",
+                    "passed": True,
+                    "score": 0.20,
+                    "message": "Scenario simulation pending or deferred to downstream stress agent.",
+                }
+            )
+
+        # -------------------------------------------------------------
         # Composite Risk Calculation & Institutional Recommendation
         # -------------------------------------------------------------
         composite_score = round(sum(risk_scores) / len(risk_scores), 3) if risk_scores else 0.5
+        time_horizon = getattr(state, "time_horizon", "short_term")
+        horizon_label = time_horizon.upper().replace("_", " ")
 
         if composite_score >= 0.65 or any(c["score"] >= 0.95 for c in checks):
             overall_risk = "HIGH" if composite_score < 0.85 else "CRITICAL"
@@ -269,6 +543,8 @@ class DeterministicRiskEngine:
             overall_risk = "LOW"
             recommendation = "APPROVED"
             reasons.append("Optimal risk profile across price sanity, drawdown, and technical metrics.")
+
+        reasons.insert(0, f"Evaluated under institutional [{horizon_label}] risk mandate.")
 
         await blackboard.update_risk_findings(
             producer=self.name,
@@ -302,3 +578,75 @@ class DeterministicRiskEngine:
             "recommendation": recommendation,
             "checks": checks,
         }
+
+    async def evaluate_gate_8(self, blackboard: BlackboardManager) -> Dict[str, Any]:
+        """Evaluate or update Gate 8 (Scenario Stress Testing) after scenario simulation completes."""
+        state = await blackboard.get_state_snapshot()
+        sim_state = state.scenario_simulation
+        if sim_state.status != FindingStatus.AVAILABLE or not sim_state.scenarios:
+            return {"status": "skipped", "message": "Scenario simulation not available"}
+
+        worst = sim_state.worst_case_scenario
+        worst_score = worst.simulated.scenario_risk_score if worst else 0.0
+        worst_name = worst.scenario_name if worst else "None"
+        worst_rec = worst.simulated.scenario_recommendation if worst else "N/A"
+
+        def _get_name(c: Any) -> str:
+            if hasattr(c, "name"):
+                return c.name
+            if isinstance(c, dict):
+                return c.get("name", "")
+            return ""
+
+        from stockshield.blackboard.models import RiskCheck
+
+        gate8_check = {
+            "name": "scenario_stress_testing",
+            "passed": worst_score < 0.65,
+            "score": round(worst_score, 3),
+            "message": (
+                f"Worst-case stress scenario '{worst_name}' yields simulated risk score {worst_score:.3f} ({worst_rec})."
+            ),
+            "details": {
+                "worst_case_scenario": worst_name,
+                "worst_case_score": worst_score,
+                "worst_case_recommendation": worst_rec,
+                "scenarios_flipping_recommendation": sim_state.scenarios_changing_recommendation,
+                "scenarios_material_risk_increase": sim_state.scenarios_material_risk_increase,
+            },
+        }
+
+        gate8_model = RiskCheck(
+            name="scenario_stress_testing",
+            passed=worst_score < 0.65,
+            score=round(worst_score, 3),
+            message=(
+                f"Worst-case stress scenario '{worst_name}' yields simulated risk score {worst_score:.3f} ({worst_rec})."
+            ),
+        )
+
+        async with blackboard._lock:
+            existing_checks = [
+                c for c in blackboard._state.risk_findings.checks if _get_name(c) != "scenario_stress_testing"
+            ]
+            existing_checks.append(gate8_model)
+            blackboard._state.risk_findings.checks = existing_checks
+
+            if worst_score >= 0.65:
+                warn_msg = (
+                    f"Gate 8 Tail Hazard: Severe market stress ({worst_name}) escalates simulated risk to {worst_rec}."
+                )
+                if warn_msg not in blackboard._state.risk_findings.warnings:
+                    blackboard._state.risk_findings.warnings.append(warn_msg)
+
+        await blackboard.log_event(
+            component=self.name,
+            event_type="gate_8_evaluated",
+            status="completed",
+            details={
+                "worst_case_scenario": worst_name,
+                "worst_case_score": worst_score,
+                "worst_case_recommendation": worst_rec,
+            },
+        )
+        return {"status": "completed", "gate_8": gate8_check}

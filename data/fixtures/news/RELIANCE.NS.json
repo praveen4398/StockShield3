@@ -1,0 +1,42 @@
+{
+  "ticker": "RELIANCE.NS",
+  "company_name": "Reliance Industries",
+  "as_of_date": "2026-10-29",
+  "articles": [
+    {
+      "title": "Reliance Industries quarterly consolidated net profit rises 5% to ₹19,320 crore led by consumer business - LiveMint",
+      "source": "LiveMint",
+      "published_date": "2026-10-27T11:00:00Z",
+      "url": "https://news.google.com/articles/reliance-q2-net-profit-growth-2026",
+      "description": "Reliance Industries reported balanced quarterly financial results as double-digit growth in Jio Infocomm and Retail cushioned cyclical refining margins."
+    },
+    {
+      "title": "Reliance Jio subscriber base reaches 490 million as 5G network rollout monetisation accelerates - Economic Times",
+      "source": "Economic Times",
+      "published_date": "2026-10-23T14:15:00Z",
+      "url": "https://news.google.com/articles/reliance-jio-subscriber-5g-monetisation-2026",
+      "description": "Jio Infocomm posted record quarterly revenue and healthy average revenue per user (ARPU) expansion driven by nationwide True 5G network adoption."
+    },
+    {
+      "title": "Reliance Retail footfalls top 280 million across 19,000 stores, digital commerce share expands - Business Standard",
+      "source": "Business Standard",
+      "published_date": "2026-10-19T09:30:00Z",
+      "url": "https://news.google.com/articles/reliance-retail-expansion-stores-2026",
+      "description": "The country's largest retailer continued aggressive square footage expansion while improving omnichannel integration via JioMart."
+    },
+    {
+      "title": "Reliance accelerates New Energy gigafactory commissioning in Jamnagar for solar and storage systems - Moneycontrol",
+      "source": "Moneycontrol",
+      "published_date": "2026-10-16T17:00:00Z",
+      "url": "https://news.google.com/articles/reliance-new-energy-gigafactory-jamnagar-2026",
+      "description": "Mukesh Ambani announced scheduled operationalization of phase-one green energy manufacturing facilities focusing on photovoltaic cells and battery packs."
+    },
+    {
+      "title": "Global crude volatility and petrochemical spreads weigh on O2C segment earnings for Reliance - Financial Express",
+      "source": "Financial Express",
+      "published_date": "2026-10-11T13:45:00Z",
+      "url": "https://news.google.com/articles/reliance-o2c-petrochemical-crude-analysis-2026",
+      "description": "The oil-to-chemicals segment experienced margin pressure due to lower polymer and fuel crack spreads across Asian trade hubs."
+    }
+  ]
+}

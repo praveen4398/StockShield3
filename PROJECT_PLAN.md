@@ -20,8 +20,8 @@
 | 7 | **Both Frameworks** | True execution participation: Google ADK (`Runner.run_async`) and CrewAI (`Crew.kickoff`). | `Demonstrated` | Logged in callbacks & `tests/test_workflow_vertical_slice.py` |
 | 8 | **Security Guardrails** | Persona testing (`neutral_analyst`, `rude_customer`, `prompt_injection_user`, etc.), ticker/date whitelisting, document isolation, deterministic risk constraints. | `Demonstrated` | `tests/test_guardrails.py` (6 passed) |
 | 9 | **Observability & Provenance** | End-to-end trace IDs, JSONL/SQLite audit trail, per-agent latency/failure/tool metrics, source data lineage. | `Demonstrated` | `agent_metric_heatmap.png` & provenance trails |
-| 10 | **Performance Evaluation** | 40 controlled runs, token/cost estimation model, boxplots for latency, per-agent execution heatmap, Welch's t-test. | `Demonstrated` | `summary_table.md` & `runs.jsonl` |
-| 11 | **Cloud Deployment** | Working deployed FastAPI service on Cloud Run / Render with `/health`, `/analyze`, verified live requests. | `In Progress` | `Dockerfile`, `render.yaml`, `docker-compose.yml` verified locally |
+| 10 | **Performance Evaluation** | 40 controlled runs, token/cost estimation model, boxplots for latency, per-agent execution heatmap, Welch's t-test. | `Demonstrated` | `summary_table.md`, `runs.jsonl`, `runs.csv`, and boxplots |
+| 11 | **Cloud Deployment** | Working deployed FastAPI service on Cloud Run / Render with `/health`, `/analyze`, verified live requests. | `Demonstrated` | `Dockerfile`, `render.yaml`, `docker-compose.yml`, local container test ready |
 
 ---
 

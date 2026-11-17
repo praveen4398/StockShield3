@@ -145,8 +145,11 @@ def calculate_atr(bars: List[Dict[str, Any]], period: int = 14) -> Optional[floa
     return round(atr, 4)
 
 
-def compute_all_indicators(bars: List[Dict[str, Any]]) -> Tuple[Dict[str, Optional[float]], str, float, List[str]]:
-    """Compute all mandatory technical indicators and derive deterministic signal."""
+def compute_all_indicators(
+    bars: List[Dict[str, Any]],
+    time_horizon: str = "short_term",
+) -> Tuple[Dict[str, Optional[float]], str, float, List[str]]:
+    """Compute all mandatory technical indicators and derive deterministic signal tailored to investment horizon."""
     warnings: List[str] = []
     if not bars:
         return {}, "NEUTRAL", 0.0, ["Empty price bars provided."]
@@ -177,45 +180,150 @@ def compute_all_indicators(bars: List[Dict[str, Any]]) -> Tuple[Dict[str, Option
     # 6. ATR
     atr_14 = calculate_atr(bars, 14)
 
-    # Deterministic signal generation
+    # Deterministic signal generation tailored to horizon
     latest_close = closes[-1]
     bullish_signals = 0
     bearish_signals = 0
     total_evals = 0
 
-    # Trend filter: Close vs SMA 50
-    if sma_50 is not None:
-        total_evals += 1
-        if latest_close > sma_50:
-            bullish_signals += 1
-        else:
-            bearish_signals += 1
+    if time_horizon == "short_term":
+        # Short-term (1-30 days): Focus on SMA-20, EMA 12/26 cross, RSI momentum, and BB middle
+        if sma_20 is not None:
+            total_evals += 1
+            if latest_close > sma_20:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
 
-    # Trend filter: SMA 50 vs SMA 200 (Golden / Death Cross)
-    if sma_50 is not None and sma_200 is not None:
-        total_evals += 1
-        if sma_50 > sma_200:
-            bullish_signals += 1
-        else:
-            bearish_signals += 1
+        if ema_12 is not None and ema_26 is not None:
+            total_evals += 1
+            if ema_12 > ema_26:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
 
-    # Momentum filter: RSI
-    if rsi_14 is not None:
-        total_evals += 1
-        if 40 <= rsi_14 <= 65:
-            bullish_signals += 1
-        elif rsi_14 < 30:
-            bullish_signals += 1  # oversold bounce candidate
-        elif rsi_14 > 70:
-            bearish_signals += 1  # overbought
+        if rsi_14 is not None:
+            total_evals += 1
+            if 45 <= rsi_14 <= 70:
+                bullish_signals += 1
+            elif rsi_14 < 30:
+                bullish_signals += 1  # oversold tactical bounce
+            elif rsi_14 > 75:
+                bearish_signals += 1  # extreme overbought exhaustion
 
-    # MACD Histogram momentum
-    if macd_hist is not None:
-        total_evals += 1
-        if macd_hist > 0:
-            bullish_signals += 1
-        else:
-            bearish_signals += 1
+        if macd_hist is not None:
+            total_evals += 1
+            if macd_hist > 0:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if bb_mid is not None:
+            total_evals += 1
+            if latest_close >= bb_mid:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+    elif time_horizon == "mid_term":
+        # Mid-term (1-6 months): Focus on SMA-50 trend, SMA-20/50 alignment, MACD line vs signal
+        if sma_50 is not None:
+            total_evals += 1
+            if latest_close > sma_50:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if sma_20 is not None and sma_50 is not None:
+            total_evals += 1
+            if sma_20 > sma_50:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if macd_line is not None and macd_signal is not None:
+            total_evals += 1
+            if macd_line > macd_signal:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if rsi_14 is not None:
+            total_evals += 1
+            if 40 <= rsi_14 <= 65:
+                bullish_signals += 1
+            elif rsi_14 < 30:
+                bullish_signals += 1
+            elif rsi_14 > 70:
+                bearish_signals += 1
+
+    elif time_horizon == "long_term":
+        # Long-term (1-2+ years): Focus on SMA-200 structural regime, Golden Cross, and structural MACD
+        if sma_200 is not None:
+            total_evals += 2  # Double weight for structural 200-day moving average
+            if latest_close > sma_200:
+                bullish_signals += 2
+            else:
+                bearish_signals += 2
+        elif sma_50 is not None:
+            total_evals += 1
+            if latest_close > sma_50:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if sma_50 is not None and sma_200 is not None:
+            total_evals += 2  # Double weight for Golden/Death cross
+            if sma_50 > sma_200:
+                bullish_signals += 2
+            else:
+                bearish_signals += 2
+
+        if macd_line is not None:
+            total_evals += 1
+            if macd_line > 0:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if rsi_14 is not None:
+            total_evals += 1
+            if rsi_14 >= 45:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+    else:
+        # Default balanced evaluation
+        if sma_50 is not None:
+            total_evals += 1
+            if latest_close > sma_50:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if sma_50 is not None and sma_200 is not None:
+            total_evals += 1
+            if sma_50 > sma_200:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
+
+        if rsi_14 is not None:
+            total_evals += 1
+            if 40 <= rsi_14 <= 65:
+                bullish_signals += 1
+            elif rsi_14 < 30:
+                bullish_signals += 1
+            elif rsi_14 > 70:
+                bearish_signals += 1
+
+        if macd_hist is not None:
+            total_evals += 1
+            if macd_hist > 0:
+                bullish_signals += 1
+            else:
+                bearish_signals += 1
 
     confidence = round(bullish_signals / total_evals, 2) if total_evals > 0 else 0.5
     if bullish_signals > bearish_signals and confidence >= 0.6:

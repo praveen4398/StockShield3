@@ -56,11 +56,16 @@ def test_provider_mode_live(provider):
 
 
 def test_provider_mode_auto(provider):
-    """Auto mode selects fixture when available, otherwise falls back to Yahoo Finance."""
-    # TCS has local fixture
+    """Auto mode retrieves fresh live data or falls back to stale fixture if offline."""
+    # TCS has local fixture (which is ~1 year old); in auto mode, provider attempts Yahoo Finance for fresh data
     res_tcs = provider.get_market_data(MarketDataRequest(ticker="TCS.NS", lookback_days=100, provider_mode="auto"))
-    assert res_tcs.source == "fixture"
+    assert res_tcs.source in {"fixture", "yahoo_finance"}
     assert res_tcs.bar_count == 100
+    if res_tcs.source == "fixture":
+        assert res_tcs.is_stale is True
+        assert res_tcs.data_quality_status == "stale"
+    else:
+        assert res_tcs.is_stale is False
 
     # WIPRO does not have local fixture -> retrieves from Yahoo Finance
     res_wipro = provider.get_market_data(MarketDataRequest(ticker="WIPRO.NS", lookback_days=100, provider_mode="auto"))

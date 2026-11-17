@@ -1,0 +1,42 @@
+{
+  "ticker": "TCS.NS",
+  "company_name": "Tata Consultancy Services",
+  "as_of_date": "2026-10-29",
+  "articles": [
+    {
+      "title": "TCS reports 6.2% rise in quarterly net profit, maintains steady operating margins - LiveMint",
+      "source": "LiveMint",
+      "published_date": "2026-10-25T09:30:00Z",
+      "url": "https://news.google.com/articles/tcs-q2-profit-growth-2026",
+      "description": "Tata Consultancy Services delivered resilient quarterly performance with constant currency revenue expansion and strong international deal bookings."
+    },
+    {
+      "title": "TCS bags $1.2 billion digital transformation and cloud modernisation contract in Europe - Economic Times",
+      "source": "Economic Times",
+      "published_date": "2026-10-22T11:15:00Z",
+      "url": "https://news.google.com/articles/tcs-mega-contract-europe-2026",
+      "description": "India's largest IT services exporter secured a landmark multi-year transformation agreement covering cloud migration and enterprise automation."
+    },
+    {
+      "title": "TCS expands enterprise AI deployment pipeline across global financial institutions - Business Standard",
+      "source": "Business Standard",
+      "published_date": "2026-10-18T14:00:00Z",
+      "url": "https://news.google.com/articles/tcs-ai-financial-pipeline-2026",
+      "description": "TCS announced new enterprise AI engagements with major North American and European banking clients focusing on automated compliance and fraud detection."
+    },
+    {
+      "title": "IT sector margin headwinds: TCS manages employee attrition at multi-quarter low of 12.3% - Moneycontrol",
+      "source": "Moneycontrol",
+      "published_date": "2026-10-15T16:45:00Z",
+      "url": "https://news.google.com/articles/tcs-attrition-margin-analysis-2026",
+      "description": "Prudent cost control and improved resource utilization helped TCS maintain industry-leading profitability despite macroeconomic software spending slowdown."
+    },
+    {
+      "title": "TCS Board declares interim dividend, reiterates shareholder capital return policy - Reuters India",
+      "source": "Reuters India",
+      "published_date": "2026-10-12T10:00:00Z",
+      "url": "https://news.google.com/articles/tcs-interim-dividend-shareholder-return-2026",
+      "description": "Tata Consultancy Services announced an interim dividend of ₹10 per share alongside continuation of its high free cash flow distribution track record."
+    }
+  ]
+}

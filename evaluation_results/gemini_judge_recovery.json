@@ -1,0 +1,552 @@
+{
+  "metadata": {
+    "experiment_id": "exp_40run_20261117_102728",
+    "audit_phase": "supplementary_post_hoc_recovery",
+    "execution_timestamp_utc": "2026-11-17T11:21:27.603367+00:00",
+    "target_cohort": "5 representative completed workflow runs from Phase 1",
+    "evaluations_attempted": 5,
+    "evaluations_completed": 4,
+    "evaluations_failed": 1,
+    "stopped_early": false,
+    "isolation_guarantee": "Zero mutation of raw workflow runs, SQLite experiments.db, or original evaluation files."
+  },
+  "evaluations": [
+    {
+      "supplementary_eval_id": "supp_judge_eval_01",
+      "original_eval_id": "judge_eval_01",
+      "experiment_id": "exp_40run_20261117_102728",
+      "target_run_id": "run_59f181a36268",
+      "case_id": "C01",
+      "ticker": "TCS.NS",
+      "workflow_mode": "sequential",
+      "time_horizon": "short_term",
+      "forecast_horizon": "1_month",
+      "timestamp_utc": "2026-11-17T11:17:51.369023+00:00",
+      "status": "completed",
+      "configured_model": "gemini-3.8-flash",
+      "actual_model": "gemini-3-flash-preview",
+      "fallback_triggered": true,
+      "overall_score": 9.25,
+      "verdict": "EXCELLENT",
+      "dimensions": {
+        "factual_grounding": {
+          "score": 9.5,
+          "explanation": "The report demonstrates exceptional adherence to the provided market data. Every price point (4084.41), technical indicator (RSI 14.47, SMA-20 4294.18), and fundamental ratio (D/E 0.0899) matches the untrusted_evidence block exactly. The report correctly identifies the data as 'STALE' (368 days old), which is a critical factual observation.",
+          "evidence_references": [
+            "GROUND-TRUTH MARKET DATA",
+            "GOOGLE ADK TECHNICAL ANALYSIS FINDINGS",
+            "Section 2: Market Data Verification"
+          ],
+          "identified_issues": []
+        },
+        "completeness": {
+          "score": 8.5,
+          "explanation": "The report synthesizes technicals, fundamentals, news, and stress testing. It explicitly acknowledges the missing SMA-200 due to the 60-bar lookback limitation. However, it could have more deeply integrated the fundamental ratios (ROE 0.50) into the executive summary rather than just listing them in the data sections.",
+          "evidence_references": [
+            "FUNDAMENTAL RATIO FINDINGS",
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "Section 4: Deterministic Risk Intelligence Review"
+          ],
+          "identified_issues": [
+            "Fundamental ratios are present but under-utilized in the qualitative synthesis."
+          ]
+        },
+        "cross_agent_consistency": {
+          "score": 9.0,
+          "explanation": "High internal consistency. The Technical Agent's BEARISH signal (RSI 14.47) aligns with the Multi-Model Forecast's BEARISH directional consensus. The Risk Engine correctly flags the RSI as 'severely oversold' while maintaining the 'APPROVED_WITH_CAUTION' status based on low debt and positive news sentiment.",
+          "evidence_references": [
+            "MULTI-MODEL PRICE FORECASTING FINDINGS",
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "Section 6: Multi-Model Forward Price Forecasting Intelligence"
+          ],
+          "identified_issues": []
+        },
+        "forecasting_assessment": {
+          "score": 9.5,
+          "explanation": "The forecasting section is exemplary in its transparency. It provides RMSE/MAE for all candidate models (ARIMA, LightGBM, ExpSmoothing), explains why ARIMA was selected, and includes a prominent 'STALE DATA NOTICE' to prevent misinterpretation of the projections.",
+          "evidence_references": [
+            "MULTI-MODEL PRICE FORECASTING FINDINGS",
+            "Section 6: Multi-Model Forward Price Forecasting Intelligence"
+          ],
+          "identified_issues": []
+        },
+        "risk_reasoning": {
+          "score": 10.0,
+          "explanation": "The risk reasoning is the strongest component. It uses a multi-gate deterministic approach, showing exactly how a 'Severe Market Crash' scenario would flip the recommendation to 'REJECTED'. It balances the technical bearishness with fundamental solvency (D/E 0.0899) and news sentiment (+0.20).",
+          "evidence_references": [
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "SCENARIO STRESS TESTING & MONTE CARLO FINDINGS",
+            "Section 7: Scenario Simulation"
+          ],
+          "identified_issues": []
+        },
+        "financial_safety": {
+          "score": 9.0,
+          "explanation": "The report avoids speculative hype and uses institutional-grade terminology ('APPROVED_WITH_CAUTION'). It includes necessary disclaimers regarding historical performance and the limitations of Monte Carlo simulations. The 'STALE' data warning is a major safety feature.",
+          "evidence_references": [
+            "Section 6: Stale Data Notice",
+            "Section 7: Monte Carlo Notice",
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS"
+          ],
+          "identified_issues": [
+            "The report is dated 2026-11-17 while using 2025 data; while labeled stale, the gap is significant for a 'tactical' request."
+          ]
+        }
+      },
+      "critical_findings": [],
+      "warnings": [
+        "Market data is 368 days old (STALE), making the 'tactical' analysis purely academic/backtest-oriented.",
+        "SMA-200 is unavailable due to 60-bar data constraint."
+      ],
+      "strengths": [
+        "Rigorous scenario stress testing with 23 evaluated conditions.",
+        "Transparent model selection process using RMSE/MAE metrics.",
+        "Clear identification of oversold RSI conditions as a volatility hazard."
+      ],
+      "limitations": [
+        "Evaluation is based on a 60-day historical window which may not capture long-term cyclical trends.",
+        "Sentiment analysis is limited to a small sample size (5 articles)."
+      ],
+      "evaluation_summary": "The StockShield 2.0 report for TCS.NS is a highly rigorous, evidence-based institutional document. It successfully navigates a complex data environment where technical signals are bearish and oversold, but fundamental and news signals remain supportive. The report's greatest strength is its deterministic risk governance, which clearly defines the boundaries under which the 'APPROVED_WITH_CAUTION' recommendation would fail. The transparency regarding model validation and data staleness meets the highest standards for automated financial reporting.",
+      "latency_ms": 69088.15,
+      "input_tokens": 7534,
+      "output_tokens": 1327,
+      "total_tokens": 8861,
+      "estimated_cost_usd": null,
+      "cost_status": "unavailable",
+      "attempt_history": [
+        {
+          "model": "gemini-3.8-flash",
+          "status": "timeout",
+          "latency_ms": 30068.65,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3.5-flash",
+          "status": "timeout",
+          "latency_ms": 29605.38,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3-flash-preview",
+          "status": "success",
+          "latency_ms": 9398.99,
+          "http_status": 200
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "supplementary_eval_id": "supp_judge_eval_07",
+      "original_eval_id": "judge_eval_07",
+      "experiment_id": "exp_40run_20261117_102728",
+      "target_run_id": "run_5e3a17fc2426",
+      "case_id": "C07",
+      "ticker": "TCS.NS",
+      "workflow_mode": "sequential",
+      "time_horizon": "mid_term",
+      "forecast_horizon": "6_months",
+      "timestamp_utc": "2026-11-17T11:18:34.051357+00:00",
+      "status": "completed",
+      "configured_model": "gemini-3.8-flash",
+      "actual_model": "gemini-3-flash-preview",
+      "fallback_triggered": true,
+      "overall_score": 9.5,
+      "verdict": "EXCELLENT",
+      "dimensions": {
+        "factual_grounding": {
+          "score": 10.0,
+          "explanation": "The report demonstrates perfect alignment with the provided market data. Every technical indicator (SMA, RSI, MACD), fundamental ratio (D/E, ROE), and price point matches the untrusted_evidence block exactly. The report correctly identifies the data as 'STALE' (368 days old), showing high integrity in data provenance.",
+          "evidence_references": [
+            "GROUND-TRUTH MARKET DATA",
+            "GOOGLE ADK TECHNICAL ANALYSIS FINDINGS",
+            "Section 2. Market Data Verification & Provenance"
+          ],
+          "identified_issues": []
+        },
+        "completeness": {
+          "score": 9.5,
+          "explanation": "The report synthesizes all available modules: technicals, fundamentals, news sentiment, multi-model forecasting, and extensive stress testing. It acknowledges the stale data limitation and provides a comprehensive view of the mid-term horizon.",
+          "evidence_references": [
+            "Section 5. Financial News & Media Sentiment Intelligence",
+            "Section 7. Scenario Simulation & Stress Testing Intelligence"
+          ],
+          "identified_issues": [
+            "Minor: Fundamental ratios are mentioned in the evidence but not fully expanded upon in the final report text beyond the risk engine's internal check."
+          ]
+        },
+        "cross_agent_consistency": {
+          "score": 8.5,
+          "explanation": "There is a notable tension between the 'BEARISH' technical signal (RSI 14.5) and the 'POSITIVE' news sentiment and 'UPWARD' ARIMA forecast. The report handles this by assigning a 'MODERATE' risk and 'APPROVED_WITH_CAUTION' status, though it could more explicitly discuss the conflict between the oversold technical state and the bullish forecast.",
+          "evidence_references": [
+            "Section 1. Executive Summary",
+            "Section 4. Deterministic Risk Intelligence Review"
+          ],
+          "identified_issues": [
+            "The report notes a BEARISH signal but the ARIMA forecast is bullish; while technically possible (mean reversion), the narrative link between these two states is thin."
+          ]
+        },
+        "forecasting_assessment": {
+          "score": 9.0,
+          "explanation": "The forecasting section is exemplary in its transparency. It provides RMSE/MAE for multiple models, explains why ARIMA was selected, and includes a prominent 'STALE DATA NOTICE'. It correctly identifies the directional consensus as NEUTRAL despite the ARIMA upward trend, likely due to model divergence or technical bearishness.",
+          "evidence_references": [
+            "MULTI-MODEL PRICE FORECASTING FINDINGS",
+            "Section 6. Multi-Model Forward Price Forecasting Intelligence"
+          ],
+          "identified_issues": []
+        },
+        "risk_reasoning": {
+          "score": 10.0,
+          "explanation": "The risk reasoning is the strongest part of the report. It uses a deterministic 8-gate system. It correctly flags the RSI extreme (14.5) and the Gate 8 failure under 'Severe Market Crash'. The recommendation 'APPROVED_WITH_CAUTION' is logically derived from the composite score of 0.129.",
+          "evidence_references": [
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "Section 7. Scenario Simulation & Stress Testing Intelligence"
+          ],
+          "identified_issues": []
+        },
+        "financial_safety": {
+          "score": 10.0,
+          "explanation": "The report adheres to the highest safety standards. It includes multiple disclaimers regarding stale data, the nature of simulations, and the fact that past performance does not guarantee future results. It avoids hyperbolic language and uses institutional-grade terminology.",
+          "evidence_references": [
+            "Section 6. Stale Data Notice",
+            "Section 7. Monte Carlo Notice"
+          ],
+          "identified_issues": []
+        }
+      },
+      "critical_findings": [],
+      "warnings": [
+        "Market data is 368 days old; analysis is effectively a backtest.",
+        "RSI is extremely low (14.5), indicating severe oversold conditions which may lead to high volatility."
+      ],
+      "strengths": [
+        "Rigorous deterministic risk gating.",
+        "Transparent model selection process with RMSE/MAE metrics.",
+        "Excellent scenario stress testing matrix with 23 evaluated paths.",
+        "Clear communication of data staleness."
+      ],
+      "limitations": [
+        "Evaluation is based on a 'deterministic-stub-v1' model output.",
+        "The audit cannot verify the real-time accuracy of the 'fixture' data source."
+      ],
+      "evaluation_summary": "The StockShield 2.0 report for TCS.NS is a highly rigorous, institutionally-aligned document. It successfully integrates conflicting signals (bearish technicals vs. positive news) into a coherent 'APPROVED_WITH_CAUTION' recommendation. Its greatest strength lies in its deterministic risk engine and the transparency of its forecasting limitations, particularly regarding the 368-day data staleness. The report avoids all speculative hype and maintains a neutral, evidence-based tone throughout.",
+      "latency_ms": 39677.12,
+      "input_tokens": 7566,
+      "output_tokens": 1239,
+      "total_tokens": 8805,
+      "estimated_cost_usd": null,
+      "cost_status": "unavailable",
+      "attempt_history": [
+        {
+          "model": "gemini-3.8-flash",
+          "status": "unavailable",
+          "latency_ms": 3353.44,
+          "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+        },
+        {
+          "model": "gemini-3.5-flash",
+          "status": "timeout",
+          "latency_ms": 29283.96,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3-flash-preview",
+          "status": "success",
+          "latency_ms": 7039.47,
+          "http_status": 200
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "supplementary_eval_id": "supp_judge_eval_17",
+      "original_eval_id": "judge_eval_17",
+      "experiment_id": "exp_40run_20261117_102728",
+      "target_run_id": "run_92f83de76ea4",
+      "case_id": "C05",
+      "ticker": "INFY.NS",
+      "workflow_mode": "parallel",
+      "time_horizon": "mid_term",
+      "forecast_horizon": "6_months",
+      "timestamp_utc": "2026-11-17T11:19:18.410370+00:00",
+      "status": "completed",
+      "configured_model": "gemini-3.8-flash",
+      "actual_model": "gemini-3-flash-preview",
+      "fallback_triggered": true,
+      "overall_score": 9.25,
+      "verdict": "EXCELLENT",
+      "dimensions": {
+        "factual_grounding": {
+          "score": 9.5,
+          "explanation": "The report demonstrates exceptional adherence to the provided market data. Every price point (1752.46), technical indicator (RSI 14.6561, SMA-20 1865.766), and fundamental ratio (D/E 0.0928) matches the untrusted_evidence block exactly. The report correctly identifies the data as 'stale' (368 days old) based on the fixture source.",
+          "evidence_references": [
+            "GROUND-TRUTH MARKET DATA",
+            "GOOGLE ADK TECHNICAL ANALYSIS FINDINGS",
+            "FUNDAMENTAL RATIO FINDINGS"
+          ],
+          "identified_issues": []
+        },
+        "completeness": {
+          "score": 9.0,
+          "explanation": "The report synthesizes all provided modules including technicals, fundamentals, news sentiment, multi-model forecasting, and stress testing. It explicitly acknowledges the missing SMA-200 data due to the 180-bar lookback constraint, fulfilling the requirement to acknowledge missing inputs.",
+          "evidence_references": [
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "SCENARIO STRESS TESTING & MONTE CARLO FINDINGS"
+          ],
+          "identified_issues": [
+            "Missing SMA-200 context noted but correctly handled as a limitation."
+          ]
+        },
+        "cross_agent_consistency": {
+          "score": 8.5,
+          "explanation": "High internal consistency between the Bearish technical signal and the Neutral/Negative forecast. However, there is a slight tension between the 'Positive' news sentiment and the 'Bearish' technicals which the report highlights as a 'cautionary flag' rather than resolving, which is appropriate for an institutional audit.",
+          "evidence_references": [
+            "NEWS & MEDIA SENTIMENT FINDINGS",
+            "GOOGLE ADK TECHNICAL ANALYSIS FINDINGS"
+          ],
+          "identified_issues": [
+            "Minor divergence between positive news sentiment and bearish technical momentum."
+          ]
+        },
+        "forecasting_assessment": {
+          "score": 9.0,
+          "explanation": "The report accurately presents the LightGBM model as the superior choice based on RMSE (8.20). It correctly labels the projections as 'historical_stale_backtest' and provides the required 95% confidence intervals and directional accuracy metrics.",
+          "evidence_references": [
+            "MULTI-MODEL PRICE FORECASTING FINDINGS",
+            "FINAL SYNTHESIZED EQUITY REPORT Section 6"
+          ],
+          "identified_issues": []
+        },
+        "risk_reasoning": {
+          "score": 9.5,
+          "explanation": "The reasoning is logically sound, deriving the 'APPROVED_WITH_CAUTION' status from the deterministic risk gates. It correctly identifies the 'Severe Market Crash' scenario as a trigger for a 'REJECTED_HIGH_RISK' flip, showing robust gate-based logic.",
+          "evidence_references": [
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "SCENARIO STRESS TESTING & MONTE CARLO FINDINGS"
+          ],
+          "identified_issues": []
+        },
+        "financial_safety": {
+          "score": 10.0,
+          "explanation": "The report maintains a highly safe and professional tone. It includes multiple prominent disclaimers regarding stale data, the nature of Monte Carlo simulations, and explicitly states that past performance does not guarantee future results. No speculative hype or guaranteed returns were found.",
+          "evidence_references": [
+            "FINAL SYNTHESIZED EQUITY REPORT Section 6 & 7",
+            "STALE DATA NOTICE"
+          ],
+          "identified_issues": []
+        }
+      },
+      "critical_findings": [],
+      "warnings": [
+        "Market data is 368 days stale; analysis is a historical backtest, not a live forecast.",
+        "SMA-200 is unavailable due to 180-bar data limit."
+      ],
+      "strengths": [
+        "Rigorous adherence to deterministic risk gates.",
+        "Transparent disclosure of data freshness and model limitations.",
+        "Excellent integration of scenario stress testing results into the final recommendation."
+      ],
+      "limitations": [
+        "Evaluation is limited to the provided 180-day window and does not account for market events occurring after 2025-11-14."
+      ],
+      "evaluation_summary": "The StockShield 2.0 report for INFY.NS is an exemplary piece of automated equity research. It maintains strict factual grounding, provides comprehensive multi-agent synthesis, and adheres to the highest standards of financial safety and risk disclosure. The handling of stale data and missing technical indicators (SMA-200) is transparent and professionally caveated.",
+      "latency_ms": 41355.88,
+      "input_tokens": 7444,
+      "output_tokens": 1176,
+      "total_tokens": 8620,
+      "estimated_cost_usd": null,
+      "cost_status": "unavailable",
+      "attempt_history": [
+        {
+          "model": "gemini-3.8-flash",
+          "status": "unavailable",
+          "latency_ms": 3165.76,
+          "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+        },
+        {
+          "model": "gemini-3.5-flash",
+          "status": "timeout",
+          "latency_ms": 29273.67,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3-flash-preview",
+          "status": "success",
+          "latency_ms": 8916.19,
+          "http_status": 200
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "supplementary_eval_id": "supp_judge_eval_26",
+      "original_eval_id": "judge_eval_26",
+      "experiment_id": "exp_40run_20261117_102728",
+      "target_run_id": "run_ecdc858376fd",
+      "case_id": "C02",
+      "ticker": "INFY.NS",
+      "workflow_mode": "hierarchical",
+      "time_horizon": "short_term",
+      "forecast_horizon": "1_month",
+      "timestamp_utc": "2026-11-17T11:20:47.533496+00:00",
+      "status": "failed",
+      "configured_model": "gemini-3.8-flash",
+      "actual_model": null,
+      "fallback_triggered": true,
+      "overall_score": null,
+      "verdict": null,
+      "dimensions": {},
+      "critical_findings": [],
+      "warnings": [],
+      "strengths": [],
+      "limitations": [],
+      "evaluation_summary": "",
+      "latency_ms": 86124.32,
+      "input_tokens": null,
+      "output_tokens": null,
+      "total_tokens": null,
+      "estimated_cost_usd": null,
+      "cost_status": null,
+      "attempt_history": [
+        {
+          "model": "gemini-3.8-flash",
+          "status": "timeout",
+          "latency_ms": 28464.52,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3.5-flash",
+          "status": "timeout",
+          "latency_ms": 29296.76,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3-flash-preview",
+          "status": "timeout",
+          "latency_ms": 28362.91,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        }
+      ],
+      "error_message": "Gemini Judge execution failed: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+    },
+    {
+      "supplementary_eval_id": "supp_judge_eval_33",
+      "original_eval_id": "judge_eval_33",
+      "experiment_id": "exp_40run_20261117_102728",
+      "target_run_id": "run_61031a8b8f98",
+      "case_id": "C09",
+      "ticker": "RELIANCE.NS",
+      "workflow_mode": "hierarchical",
+      "time_horizon": "long_term",
+      "forecast_horizon": "1_year",
+      "timestamp_utc": "2026-11-17T11:21:27.603367+00:00",
+      "status": "completed",
+      "configured_model": "gemini-3.8-flash",
+      "actual_model": "gemini-3-flash-preview",
+      "fallback_triggered": true,
+      "overall_score": 9.17,
+      "verdict": "EXCELLENT",
+      "dimensions": {
+        "factual_grounding": {
+          "score": 9.5,
+          "explanation": "The report demonstrates high fidelity to the provided market data. Prices, SMA values, RSI, and fundamental ratios (D/E 0.3947, ROE 0.0878) match the untrusted_evidence block exactly. The report correctly identifies the data as stale (368 days old) based on the provided fixture metadata.",
+          "evidence_references": [
+            "GROUND-TRUTH MARKET DATA",
+            "FUNDAMENTAL RATIO FINDINGS",
+            "Section 2: Market Data Verification"
+          ],
+          "identified_issues": []
+        },
+        "completeness": {
+          "score": 10.0,
+          "explanation": "The report synthesizes all available modules: technicals, fundamentals, news sentiment, multi-model forecasting, deterministic risk gates, and scenario stress testing. It even includes the Monte Carlo simulation results which are often omitted in lower-tier reports.",
+          "evidence_references": [
+            "Section 5: News & Media Sentiment Intelligence",
+            "Section 7: Scenario Simulation & Stress Testing Intelligence"
+          ],
+          "identified_issues": []
+        },
+        "cross_agent_consistency": {
+          "score": 8.5,
+          "explanation": "Generally consistent, but there is a slight tension between the Technical Agent's 'BEARISH' signal (RSI 13.98) and the Forecasting Agent's 'NEUTRAL' consensus with a +5.6% 1-year return. The report acknowledges this by labeling the recommendation 'APPROVED_WITH_CAUTION' and highlighting the oversold RSI.",
+          "evidence_references": [
+            "Section 3: Google ADK Technical Quantitative Findings",
+            "Section 6: Multi-Model Forward Price Forecasting Intelligence"
+          ],
+          "identified_issues": [
+            "Minor divergence between bearish technical momentum and neutral/positive quantitative forecast."
+          ]
+        },
+        "forecasting_assessment": {
+          "score": 9.0,
+          "explanation": "Excellent transparency regarding model selection. It explicitly states why ARIMA was chosen (lowest RMSE of 2.94) and provides a full comparison table with ExponentialSmoothing and LightGBM. The inclusion of confidence intervals and a 'stale data' warning is professionally handled.",
+          "evidence_references": [
+            "MULTI-MODEL PRICE FORECASTING FINDINGS",
+            "Section 6: Multi-Model Forward Price Forecasting Intelligence"
+          ],
+          "identified_issues": []
+        },
+        "risk_reasoning": {
+          "score": 9.5,
+          "explanation": "The risk reasoning is logically sound and follows the deterministic gate logic. It correctly identifies that while the baseline is 'MODERATE', a 'Severe Market Crash' scenario triggers a 'REJECTED_HIGH_RISK' state. This shows the system is correctly interpreting the Gate 8 stress tests.",
+          "evidence_references": [
+            "DETERMINISTIC RISK INTELLIGENCE FINDINGS",
+            "Section 4: Deterministic Risk Intelligence Review"
+          ],
+          "identified_issues": []
+        },
+        "financial_safety": {
+          "score": 9.5,
+          "explanation": "The report adheres to high safety standards. It includes multiple disclaimers regarding stale data, the fact that past performance does not guarantee future results, and explicitly states that projections are not statistical certainties. No 'guaranteed' returns are promised.",
+          "evidence_references": [
+            "Section 6: Stale Data Notice",
+            "Section 7: Monte Carlo Notice"
+          ],
+          "identified_issues": []
+        }
+      },
+      "critical_findings": [],
+      "warnings": [
+        "Market data is 368 days old (stale), which significantly limits the real-world utility of the forecast for current trading.",
+        "RSI is extremely low (13.98), indicating severe oversold conditions that may lead to high volatility."
+      ],
+      "strengths": [
+        "Rigorous model validation transparency (RMSE/MAE comparison).",
+        "Comprehensive stress testing matrix with 23 scenarios.",
+        "Clear distinction between baseline risk and tail-risk scenarios."
+      ],
+      "limitations": [
+        "Audit is based on a single snapshot of data provided in the untrusted_evidence block.",
+        "The auditor cannot verify the underlying math of the ARIMA model, only the consistency of its reporting."
+      ],
+      "evaluation_summary": "The StockShield 2.0 report for RELIANCE.NS is an exemplary piece of automated equity research. It maintains strict factual grounding, provides a transparent multi-model forecasting methodology, and utilizes a sophisticated deterministic risk engine. The report's greatest strength is its risk-aware posture, specifically the use of Gate 8 stress testing to provide a 'REJECTED' status under crash scenarios despite a 'MODERATE' baseline. While the data is stale, the report handles this limitation with prominent disclosures.",
+      "latency_ms": 37061.78,
+      "input_tokens": 7600,
+      "output_tokens": 1197,
+      "total_tokens": 8797,
+      "estimated_cost_usd": null,
+      "cost_status": "unavailable",
+      "attempt_history": [
+        {
+          "model": "gemini-3.8-flash",
+          "status": "timeout",
+          "latency_ms": 28097.85,
+          "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+        },
+        {
+          "model": "gemini-3.5-flash",
+          "status": "unavailable",
+          "latency_ms": 1871.14,
+          "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+        },
+        {
+          "model": "gemini-3-flash-preview",
+          "status": "success",
+          "latency_ms": 7092.21,
+          "http_status": 200
+        }
+      ],
+      "error_message": null
+    }
+  ]
+}

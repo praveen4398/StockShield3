@@ -1,4 +1,8 @@
-# Python
+# ===========================================================================
+# StockShield 2.0 — Production Git Ignore Rules
+# ===========================================================================
+
+# Python Bytecode & Compilation
 __pycache__/
 *.py[cod]
 *$py.class
@@ -26,26 +30,47 @@ env/
 venv/
 ENV/
 
-# Environment Variables & Secrets
+# Environment Variables & Secrets (CRITICAL)
 .env
 *.env.local
+*.env.*.local
 secrets/
 
-# Testing & Coverage
+# SQLite Databases & Binary Storage (>100MB GitHub limit protection)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+data/*.db
+evaluation_results/experiments.db
+
+# Testing, Linting & Coverage Caches
+.cache/
 .pytest_cache/
-.coverage
-htmlcov/
 .ruff_cache/
 .mypy_cache/
+.coverage
+htmlcov/
 
-# IDE
+# IDE & Tool Metadata
 .idea/
 .vscode/
 *.swp
 *.swo
+.qodo/
+.crewai/
 
-# Project outputs that shouldn't be tracked if large
-# (evaluation results scripts/reports will be tracked, raw logs can be ignored if temporary)
+# OS-Generated Files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporary Scratch Scripts & Execution Logs
+scratch/
 *.log
 evaluation_results/logs/
 
+# Test-generated Temporary Snapshots
+evaluation_results/snapshots/test_verify_*.json

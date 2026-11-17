@@ -1,0 +1,1458 @@
+{
+  "trial_metadata": {
+    "title": "StockShield 2.0 Multi-Horizon Agentic Season Analysis Trial",
+    "primary_ticker": "TCS.NS",
+    "secondary_ticker": "INFY.NS",
+    "executed_at_utc": "2026-11-16T17:40:23.775411+00:00",
+    "tested_horizons": [
+      "short_term",
+      "mid_term",
+      "long_term"
+    ],
+    "tested_forecast_windows": [
+      "1_month",
+      "3_months",
+      "1_year"
+    ],
+    "snapshot_comparability": "verified_unified_snapshot_per_ticker"
+  },
+  "tcs_ns": {
+    "ticker": "TCS.NS",
+    "snapshot_metadata": {
+      "source": "yahoo_finance",
+      "data_quality_status": "valid",
+      "is_stale": false,
+      "freshness_age_days": 0,
+      "latest_close": 2405.0,
+      "master_bar_count": 500,
+      "start_date": "2024-11-07",
+      "end_date": "2026-11-16",
+      "comparable_live": true,
+      "stale_notice": null
+    },
+    "horizon_runs": {
+      "short_term": {
+        "configuration": {
+          "horizon": "short_term",
+          "forecast_horizon": "1_month",
+          "lookback_days": 100,
+          "label": "Short-Term Tactical Momentum (1\u201330 Days)",
+          "description": "Tactical trading season focusing on fast RSI momentum, ATR breakout, and 1-month predictive price paths."
+        },
+        "run_id": "run_b62868538069",
+        "trace_id": "trace_eab84ebe76aa4a2c",
+        "workflow_status": "completed",
+        "market_data_courier": {
+          "source": "yahoo_finance",
+          "bar_count": 100,
+          "start_date": "2026-06-23",
+          "end_date": "2026-11-16",
+          "latest_close": 2405.0,
+          "data_quality": "incomplete",
+          "is_stale": false,
+          "freshness_age_days": 0
+        },
+        "technical_agent": {
+          "signal": "BEARISH",
+          "confidence": 0.4,
+          "indicators": {
+            "sma_20": 2479.885,
+            "sma_50": 2288.4008,
+            "sma_200": null,
+            "ema_12": 2447.1643,
+            "ema_26": 2405.2421,
+            "macd_line": 41.9222,
+            "macd_signal": 61.8981,
+            "macd_hist": -19.976,
+            "rsi_14": 50.3986,
+            "bb_upper": 2552.2432,
+            "bb_middle": 2479.885,
+            "bb_lower": 2407.5268,
+            "bb_bandwidth": 5.8356,
+            "atr_14": 66.5006
+          },
+          "summary": "[Google ADK TechnicalAgent / Runner Session sess_7eacfedb / SHORT TERM] Review for TCS.NS: Close=2405.0 INR, SMA-20=2479.885, SMA-50=2288.4008, SMA-200=None, RSI-14=50.3986, MACD Hist=-19.976. Overall signal: BEARISH (40% confidence)."
+        },
+        "news_sentiment_agent": {
+          "overall_sentiment": "POSITIVE",
+          "sentiment_score": 0.3,
+          "total_articles": 10,
+          "positive_count": 3,
+          "negative_count": 0,
+          "risk_observations": [
+            "Supportive media consensus (3/10 articles positive, zero negative).",
+            "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+            "[SHORT TERM] Short-term news weighting: high sensitivity to breaking catalysts, headlines, and immediate sentiment momentum."
+          ]
+        },
+        "forecasting_agent": {
+          "status": "available",
+          "best_model": "ARIMA",
+          "model_divergence_pct": 4.36,
+          "directional_consensus": "MIXED",
+          "validation_rmse": 53.27,
+          "validation_directional_accuracy": 20.0,
+          "forecast_window": "1_month",
+          "projections": [
+            {
+              "horizon_trading_days": 1,
+              "target_date": "2026-11-17",
+              "predicted_price": 2405.0,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                2316.6439,
+                2493.3561
+              ]
+            },
+            {
+              "horizon_trading_days": 5,
+              "target_date": "2026-11-23",
+              "predicted_price": 2405.0,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                2207.4299,
+                2602.5701
+              ]
+            },
+            {
+              "horizon_trading_days": 10,
+              "target_date": "2026-12-01",
+              "predicted_price": 2405.0,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                2125.5936,
+                2684.4064
+              ]
+            },
+            {
+              "horizon_trading_days": 21,
+              "target_date": "2026-12-16",
+              "predicted_price": 2405.0,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                2000.1017,
+                2809.8983
+              ]
+            }
+          ]
+        },
+        "risk_engine": {
+          "overall_risk_level": "MODERATE",
+          "composite_risk_score": 0.107,
+          "recommendation": "APPROVED_WITH_CAUTION",
+          "warnings": [
+            "Lookback limited to 100 bars; 200-day trend context unavailable.",
+            "Low validation directional accuracy (20.0%): ARIMA trend direction carries elevated uncertainty.",
+            "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+          ],
+          "reasons": [
+            "Evaluated under institutional [SHORT TERM] risk mandate.",
+            "Supportive media sentiment (3 positive reports) provides positive institutional context.",
+            "Passes institutional safety criteria with noted cautionary flags."
+          ]
+        },
+        "scenario_simulation_agent": {
+          "total_scenarios": 23,
+          "worst_case_scenario": "Severe Market Crash",
+          "worst_case_risk_score": 0.698,
+          "monte_carlo": {
+            "horizon_days": 20,
+            "num_simulations": 1000,
+            "initial_price": 2405.0,
+            "mean_terminal_price": 2474.91,
+            "median_terminal_price": 2473.06,
+            "quantiles": {
+              "p5": 2127.12,
+              "p25": 2323.06,
+              "p75": 2605.03,
+              "p95": 2854.39
+            },
+            "probability_loss_pct": 38.0,
+            "probability_severe_loss_pct": 7.1,
+            "expected_annualized_volatility": 31.62
+          }
+        },
+        "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / SHORT TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for TCS.NS. Technical momentum is BEARISH with 40% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.11)."
+      },
+      "mid_term": {
+        "configuration": {
+          "horizon": "mid_term",
+          "forecast_horizon": "3_months",
+          "lookback_days": 200,
+          "label": "Mid-Term Positional Trend (1\u20136 Months)",
+          "description": "Positional swing/quarterly trend season focusing on SMA 20/50 alignment, MACD cycle, and quarterly earnings trajectory."
+        },
+        "run_id": "run_5af296642ff2",
+        "trace_id": "trace_73f6634fd7544f20",
+        "workflow_status": "completed",
+        "market_data_courier": {
+          "source": "yahoo_finance",
+          "bar_count": 200,
+          "start_date": "2026-01-22",
+          "end_date": "2026-11-16",
+          "latest_close": 2405.0,
+          "data_quality": "valid",
+          "is_stale": false,
+          "freshness_age_days": 0
+        },
+        "technical_agent": {
+          "signal": "BULLISH",
+          "confidence": 0.75,
+          "indicators": {
+            "sma_20": 2479.885,
+            "sma_50": 2288.4008,
+            "sma_200": 2362.8382,
+            "ema_12": 2447.1643,
+            "ema_26": 2405.4452,
+            "macd_line": 41.7191,
+            "macd_signal": 61.5995,
+            "macd_hist": -19.8804,
+            "rsi_14": 50.3818,
+            "bb_upper": 2552.2432,
+            "bb_middle": 2479.885,
+            "bb_lower": 2407.5268,
+            "bb_bandwidth": 5.8356,
+            "atr_14": 66.499
+          },
+          "summary": "[Google ADK TechnicalAgent / Runner Session sess_63f4822e / MID TERM] Review for TCS.NS: Close=2405.0 INR, SMA-20=2479.885, SMA-50=2288.4008, SMA-200=2362.8382, RSI-14=50.3818, MACD Hist=-19.8804. Overall signal: BULLISH (75% confidence)."
+        },
+        "news_sentiment_agent": {
+          "overall_sentiment": "POSITIVE",
+          "sentiment_score": 0.3,
+          "total_articles": 10,
+          "positive_count": 3,
+          "negative_count": 0,
+          "risk_observations": [
+            "Supportive media consensus (3/10 articles positive, zero negative).",
+            "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+            "[MID TERM] Mid-term news weighting: focus on quarterly earnings trends, sector rotation, and monetary policy."
+          ]
+        },
+        "forecasting_agent": {
+          "status": "available",
+          "best_model": "ExponentialSmoothing",
+          "model_divergence_pct": 0.0,
+          "directional_consensus": "NEUTRAL",
+          "validation_rmse": 51.3157,
+          "validation_directional_accuracy": 40.0,
+          "forecast_window": "3_months",
+          "projections": [
+            {
+              "horizon_trading_days": 5,
+              "target_date": "2026-11-23",
+              "predicted_price": 2405.0164,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                2194.3356,
+                2615.6972
+              ]
+            },
+            {
+              "horizon_trading_days": 21,
+              "target_date": "2026-12-16",
+              "predicted_price": 2404.0535,
+              "predicted_change_pct": -0.04,
+              "confidence_interval_95": [
+                1972.2863,
+                2835.8207
+              ]
+            },
+            {
+              "horizon_trading_days": 42,
+              "target_date": "2027-01-15",
+              "predicted_price": 2403.3058,
+              "predicted_change_pct": -0.07,
+              "confidence_interval_95": [
+                1792.6947,
+                3013.9168
+              ]
+            },
+            {
+              "horizon_trading_days": 63,
+              "target_date": "2027-02-16",
+              "predicted_price": 2402.8966,
+              "predicted_change_pct": -0.09,
+              "confidence_interval_95": [
+                1655.0539,
+                3150.7393
+              ]
+            }
+          ]
+        },
+        "risk_engine": {
+          "overall_risk_level": "MODERATE",
+          "composite_risk_score": 0.164,
+          "recommendation": "APPROVED_WITH_CAUTION",
+          "warnings": [
+            "Low validation directional accuracy (40.0%): ExponentialSmoothing trend direction carries elevated uncertainty.",
+            "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+          ],
+          "reasons": [
+            "Evaluated under institutional [MID TERM] risk mandate.",
+            "Asset suffered substantial peak-to-trough decline of 38.53%.",
+            "Supportive media sentiment (3 positive reports) provides positive institutional context.",
+            "Passes institutional safety criteria with noted cautionary flags."
+          ]
+        },
+        "scenario_simulation_agent": {
+          "total_scenarios": 23,
+          "worst_case_scenario": "Severe Market Crash",
+          "worst_case_risk_score": 0.698,
+          "monte_carlo": {
+            "horizon_days": 63,
+            "num_simulations": 1000,
+            "initial_price": 2405.0,
+            "mean_terminal_price": 2196.96,
+            "median_terminal_price": 2181.38,
+            "quantiles": {
+              "p5": 1658.46,
+              "p25": 1946.74,
+              "p75": 2397.72,
+              "p95": 2831.44
+            },
+            "probability_loss_pct": 75.1,
+            "probability_severe_loss_pct": 48.7,
+            "expected_annualized_volatility": 32.4
+          }
+        },
+        "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / MID TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for TCS.NS. Technical momentum is BULLISH with 75% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.16)."
+      },
+      "long_term": {
+        "configuration": {
+          "horizon": "long_term",
+          "forecast_horizon": "1_year",
+          "lookback_days": 500,
+          "label": "Long-Term Strategic Fundamental (1\u20132+ Years)",
+          "description": "Strategic asset holding season anchored to 200-day moving average regime, macro stress survival, and 1-year annual horizons."
+        },
+        "run_id": "run_642db5e60751",
+        "trace_id": "trace_21bb7e6bb0534092",
+        "workflow_status": "completed",
+        "market_data_courier": {
+          "source": "yahoo_finance",
+          "bar_count": 500,
+          "start_date": "2024-11-07",
+          "end_date": "2026-11-16",
+          "latest_close": 2405.0,
+          "data_quality": "valid",
+          "is_stale": false,
+          "freshness_age_days": 0
+        },
+        "technical_agent": {
+          "signal": "BULLISH",
+          "confidence": 0.67,
+          "indicators": {
+            "sma_20": 2479.885,
+            "sma_50": 2288.4008,
+            "sma_200": 2362.8382,
+            "ema_12": 2447.1643,
+            "ema_26": 2405.4451,
+            "macd_line": 41.7192,
+            "macd_signal": 61.5996,
+            "macd_hist": -19.8804,
+            "rsi_14": 50.3818,
+            "bb_upper": 2552.2432,
+            "bb_middle": 2479.885,
+            "bb_lower": 2407.5268,
+            "bb_bandwidth": 5.8356,
+            "atr_14": 66.499
+          },
+          "summary": "[Google ADK TechnicalAgent / Runner Session sess_e30c6325 / LONG TERM] Review for TCS.NS: Close=2405.0 INR, SMA-20=2479.885, SMA-50=2288.4008, SMA-200=2362.8382, RSI-14=50.3818, MACD Hist=-19.8804. Overall signal: BULLISH (67% confidence)."
+        },
+        "news_sentiment_agent": {
+          "overall_sentiment": "POSITIVE",
+          "sentiment_score": 0.3,
+          "total_articles": 10,
+          "positive_count": 3,
+          "negative_count": 0,
+          "risk_observations": [
+            "Supportive media consensus (3/10 articles positive, zero negative).",
+            "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+            "[LONG TERM] Long-term news weighting: focus on corporate governance, regulatory stability, and secular fundamentals."
+          ]
+        },
+        "forecasting_agent": {
+          "status": "available",
+          "best_model": "ExponentialSmoothing",
+          "model_divergence_pct": 0.0,
+          "directional_consensus": "NEUTRAL",
+          "validation_rmse": 49.9751,
+          "validation_directional_accuracy": 40.0,
+          "forecast_window": "1_year",
+          "projections": [
+            {
+              "horizon_trading_days": 21,
+              "target_date": "2026-12-16",
+              "predicted_price": 2394.3311,
+              "predicted_change_pct": -0.44,
+              "confidence_interval_95": [
+                1987.8755,
+                2800.7868
+              ]
+            },
+            {
+              "horizon_trading_days": 63,
+              "target_date": "2027-02-16",
+              "predicted_price": 2376.0051,
+              "predicted_change_pct": -1.21,
+              "confidence_interval_95": [
+                1672.0033,
+                3080.0069
+              ]
+            },
+            {
+              "horizon_trading_days": 126,
+              "target_date": "2027-05-19",
+              "predicted_price": 2354.8276,
+              "predicted_change_pct": -2.09,
+              "confidence_interval_95": [
+                1359.2187,
+                3350.4365
+              ]
+            },
+            {
+              "horizon_trading_days": 252,
+              "target_date": "2027-11-12",
+              "predicted_price": 2328.1237,
+              "predicted_change_pct": -3.2,
+              "confidence_interval_95": [
+                920.12,
+                3736.1273
+              ]
+            }
+          ]
+        },
+        "risk_engine": {
+          "overall_risk_level": "MODERATE",
+          "composite_risk_score": 0.214,
+          "recommendation": "APPROVED_WITH_CAUTION",
+          "warnings": [
+            "Forward projection indicates moderate downward pressure (-3.2% over 252 sessions).",
+            "Low validation directional accuracy (40.0%): ExponentialSmoothing trend direction carries elevated uncertainty.",
+            "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+          ],
+          "reasons": [
+            "Evaluated under institutional [LONG TERM] risk mandate.",
+            "Asset suffered substantial peak-to-trough decline of 55.69%.",
+            "Supportive media sentiment (3 positive reports) provides positive institutional context.",
+            "Passes institutional safety criteria with noted cautionary flags."
+          ]
+        },
+        "scenario_simulation_agent": {
+          "total_scenarios": 23,
+          "worst_case_scenario": "Severe Market Crash",
+          "worst_case_risk_score": 0.698,
+          "monte_carlo": {
+            "horizon_days": 252,
+            "num_simulations": 1000,
+            "initial_price": 2405.0,
+            "mean_terminal_price": 1810.58,
+            "median_terminal_price": 1769.04,
+            "quantiles": {
+              "p5": 1144.85,
+              "p25": 1476.6,
+              "p75": 2055.62,
+              "p95": 2676.67
+            },
+            "probability_loss_pct": 89.1,
+            "probability_severe_loss_pct": 80.4,
+            "expected_annualized_volatility": 25.72
+          }
+        },
+        "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / LONG TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for TCS.NS. Technical momentum is BULLISH with 67% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.21)."
+      }
+    },
+    "comparative_matrix": [
+      {
+        "horizon": "short_term",
+        "forecast_window": "1_month",
+        "lookback_bars": 100,
+        "latest_close": 2405.0,
+        "technical_signal": "BEARISH (40%)",
+        "best_forecaster": "ARIMA",
+        "terminal_forecast_change": "+0.00%",
+        "risk_score": 0.107,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "mc_horizon_days": 20,
+        "mc_loss_prob": "38.0%"
+      },
+      {
+        "horizon": "mid_term",
+        "forecast_window": "3_months",
+        "lookback_bars": 200,
+        "latest_close": 2405.0,
+        "technical_signal": "BULLISH (75%)",
+        "best_forecaster": "ExponentialSmoothing",
+        "terminal_forecast_change": "-0.09%",
+        "risk_score": 0.164,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "mc_horizon_days": 63,
+        "mc_loss_prob": "75.1%"
+      },
+      {
+        "horizon": "long_term",
+        "forecast_window": "1_year",
+        "lookback_bars": 500,
+        "latest_close": 2405.0,
+        "technical_signal": "BULLISH (67%)",
+        "best_forecaster": "ExponentialSmoothing",
+        "terminal_forecast_change": "-3.20%",
+        "risk_score": 0.214,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "mc_horizon_days": 252,
+        "mc_loss_prob": "89.1%"
+      }
+    ]
+  },
+  "infy_ns": {
+    "ticker": "INFY.NS",
+    "snapshot_metadata": {
+      "source": "yahoo_finance",
+      "data_quality_status": "valid",
+      "is_stale": false,
+      "freshness_age_days": 0,
+      "latest_close": 1145.1,
+      "master_bar_count": 500,
+      "start_date": "2024-11-07",
+      "end_date": "2026-11-16",
+      "comparable_live": true,
+      "stale_notice": null
+    },
+    "horizon_runs": {
+      "short_term": {
+        "configuration": {
+          "horizon": "short_term",
+          "forecast_horizon": "1_month",
+          "lookback_days": 100,
+          "label": "Short-Term Tactical Momentum (1\u201330 Days)",
+          "description": "Tactical trading season focusing on fast RSI momentum, ATR breakout, and 1-month predictive price paths."
+        },
+        "run_id": "run_385fef4b31d4",
+        "trace_id": "trace_ee6cd296a93f4ce8",
+        "workflow_status": "completed",
+        "market_data_courier": {
+          "source": "yahoo_finance",
+          "bar_count": 100,
+          "start_date": "2026-06-23",
+          "end_date": "2026-11-16",
+          "latest_close": 1145.1,
+          "data_quality": "incomplete",
+          "is_stale": false,
+          "freshness_age_days": 0
+        },
+        "technical_agent": {
+          "signal": "BULLISH",
+          "confidence": 0.8,
+          "indicators": {
+            "sma_20": 1139.9515,
+            "sma_50": 1069.9878,
+            "sma_200": null,
+            "ema_12": 1143.0488,
+            "ema_26": 1118.74,
+            "macd_line": 24.3088,
+            "macd_signal": 26.9477,
+            "macd_hist": -2.6388,
+            "rsi_14": 56.189,
+            "bb_upper": 1178.1081,
+            "bb_middle": 1139.9515,
+            "bb_lower": 1101.7949,
+            "bb_bandwidth": 6.6944,
+            "atr_14": 35.8464
+          },
+          "summary": "[Google ADK TechnicalAgent / Runner Session sess_7c9ad33b / SHORT TERM] Review for INFY.NS: Close=1145.1 INR, SMA-20=1139.9515, SMA-50=1069.9878, SMA-200=None, RSI-14=56.189, MACD Hist=-2.6388. Overall signal: BULLISH (80% confidence)."
+        },
+        "news_sentiment_agent": {
+          "overall_sentiment": "NEUTRAL",
+          "sentiment_score": 0.0,
+          "total_articles": 0,
+          "positive_count": 0,
+          "negative_count": 0,
+          "risk_observations": [
+            "No recent news articles identified for ticker."
+          ]
+        },
+        "forecasting_agent": {
+          "status": "available",
+          "best_model": "ARIMA",
+          "model_divergence_pct": 3.74,
+          "directional_consensus": "MIXED",
+          "validation_rmse": 16.5208,
+          "validation_directional_accuracy": 50.0,
+          "forecast_window": "1_month",
+          "projections": [
+            {
+              "horizon_trading_days": 1,
+              "target_date": "2026-11-17",
+              "predicted_price": 1145.1,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                1102.4604,
+                1187.7396
+              ]
+            },
+            {
+              "horizon_trading_days": 5,
+              "target_date": "2026-11-23",
+              "predicted_price": 1145.1,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                1049.755,
+                1240.445
+              ]
+            },
+            {
+              "horizon_trading_days": 10,
+              "target_date": "2026-12-01",
+              "predicted_price": 1145.1,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                1010.2618,
+                1279.9382
+              ]
+            },
+            {
+              "horizon_trading_days": 21,
+              "target_date": "2026-12-16",
+              "predicted_price": 1145.1,
+              "predicted_change_pct": 0.0,
+              "confidence_interval_95": [
+                949.7008,
+                1340.4992
+              ]
+            }
+          ]
+        },
+        "risk_engine": {
+          "overall_risk_level": "MODERATE",
+          "composite_risk_score": 0.136,
+          "recommendation": "APPROVED_WITH_CAUTION",
+          "warnings": [
+            "Lookback limited to 100 bars; 200-day trend context unavailable.",
+            "Risk assessment conducted without media sentiment corroboration (news feed unavailable).",
+            "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+          ],
+          "reasons": [
+            "Evaluated under institutional [SHORT TERM] risk mandate.",
+            "Passes institutional safety criteria with noted cautionary flags."
+          ]
+        },
+        "scenario_simulation_agent": {
+          "total_scenarios": 23,
+          "worst_case_scenario": "Severe Market Crash",
+          "worst_case_risk_score": 0.698,
+          "monte_carlo": {
+            "horizon_days": 20,
+            "num_simulations": 1000,
+            "initial_price": 1145.1,
+            "mean_terminal_price": 1166.85,
+            "median_terminal_price": 1165.86,
+            "quantiles": {
+              "p5": 999.69,
+              "p25": 1093.75,
+              "p75": 1229.39,
+              "p95": 1349.59
+            },
+            "probability_loss_pct": 41.9,
+            "probability_severe_loss_pct": 9.2,
+            "expected_annualized_volatility": 32.26
+          }
+        },
+        "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / SHORT TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for INFY.NS. Technical momentum is BULLISH with 80% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.14)."
+      },
+      "mid_term": {
+        "configuration": {
+          "horizon": "mid_term",
+          "forecast_horizon": "3_months",
+          "lookback_days": 200,
+          "label": "Mid-Term Positional Trend (1\u20136 Months)",
+          "description": "Positional swing/quarterly trend season focusing on SMA 20/50 alignment, MACD cycle, and quarterly earnings trajectory."
+        },
+        "run_id": "run_03f551e6ea83",
+        "trace_id": "trace_0aeede343e5942f7",
+        "workflow_status": "completed",
+        "market_data_courier": {
+          "source": "yahoo_finance",
+          "bar_count": 200,
+          "start_date": "2026-01-22",
+          "end_date": "2026-11-16",
+          "latest_close": 1145.1,
+          "data_quality": "valid",
+          "is_stale": false,
+          "freshness_age_days": 0
+        },
+        "technical_agent": {
+          "signal": "BULLISH",
+          "confidence": 0.75,
+          "indicators": {
+            "sma_20": 1139.9515,
+            "sma_50": 1069.9878,
+            "sma_200": 1153.4047,
+            "ema_12": 1143.0488,
+            "ema_26": 1118.8086,
+            "macd_line": 24.2402,
+            "macd_signal": 26.8468,
+            "macd_hist": -2.6066,
+            "rsi_14": 56.1684,
+            "bb_upper": 1178.1081,
+            "bb_middle": 1139.9515,
+            "bb_lower": 1101.7949,
+            "bb_bandwidth": 6.6944,
+            "atr_14": 35.8484
+          },
+          "summary": "[Google ADK TechnicalAgent / Runner Session sess_3ac48433 / MID TERM] Review for INFY.NS: Close=1145.1 INR, SMA-20=1139.9515, SMA-50=1069.9878, SMA-200=1153.4047, RSI-14=56.1684, MACD Hist=-2.6066. Overall signal: BULLISH (75% confidence)."
+        },
+        "news_sentiment_agent": {
+          "overall_sentiment": "MIXED",
+          "sentiment_score": 0.0,
+          "total_articles": 10,
+          "positive_count": 2,
+          "negative_count": 2,
+          "risk_observations": [
+            "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+            "[MID TERM] Mid-term news weighting: focus on quarterly earnings trends, sector rotation, and monetary policy."
+          ]
+        },
+        "forecasting_agent": {
+          "status": "available",
+          "best_model": "ExponentialSmoothing",
+          "model_divergence_pct": 0.0,
+          "directional_consensus": "NEUTRAL",
+          "validation_rmse": 16.3234,
+          "validation_directional_accuracy": 60.0,
+          "forecast_window": "3_months",
+          "projections": [
+            {
+              "horizon_trading_days": 5,
+              "target_date": "2026-11-23",
+              "predicted_price": 1144.9035,
+              "predicted_change_pct": -0.02,
+              "confidence_interval_95": [
+                1039.0585,
+                1250.7486
+              ]
+            },
+            {
+              "horizon_trading_days": 21,
+              "target_date": "2026-12-16",
+              "predicted_price": 1144.6383,
+              "predicted_change_pct": -0.04,
+              "confidence_interval_95": [
+                927.7205,
+                1361.5562
+              ]
+            },
+            {
+              "horizon_trading_days": 42,
+              "target_date": "2027-01-15",
+              "predicted_price": 1144.447,
+              "predicted_change_pct": -0.06,
+              "confidence_interval_95": [
+                837.6789,
+                1451.2152
+              ]
+            },
+            {
+              "horizon_trading_days": 63,
+              "target_date": "2027-02-16",
+              "predicted_price": 1144.351,
+              "predicted_change_pct": -0.07,
+              "confidence_interval_95": [
+                768.6383,
+                1520.0637
+              ]
+            }
+          ]
+        },
+        "risk_engine": {
+          "overall_risk_level": "LOW",
+          "composite_risk_score": 0.186,
+          "recommendation": "APPROVED",
+          "warnings": [
+            "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+          ],
+          "reasons": [
+            "Evaluated under institutional [MID TERM] risk mandate.",
+            "Asset suffered substantial peak-to-trough decline of 41.45%.",
+            "Optimal risk profile across price sanity, drawdown, and technical metrics."
+          ]
+        },
+        "scenario_simulation_agent": {
+          "total_scenarios": 23,
+          "worst_case_scenario": "Severe Market Crash",
+          "worst_case_risk_score": 0.698,
+          "monte_carlo": {
+            "horizon_days": 63,
+            "num_simulations": 1000,
+            "initial_price": 1145.1,
+            "mean_terminal_price": 1012.11,
+            "median_terminal_price": 1004.04,
+            "quantiles": {
+              "p5": 754.33,
+              "p25": 891.63,
+              "p75": 1108.15,
+              "p95": 1318.06
+            },
+            "probability_loss_pct": 80.3,
+            "probability_severe_loss_pct": 56.2,
+            "expected_annualized_volatility": 33.8
+          }
+        },
+        "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / MID TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for INFY.NS. Technical momentum is BULLISH with 75% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of LOW with recommendation 'APPROVED' (Composite Risk Score: 0.19)."
+      },
+      "long_term": {
+        "configuration": {
+          "horizon": "long_term",
+          "forecast_horizon": "1_year",
+          "lookback_days": 500,
+          "label": "Long-Term Strategic Fundamental (1\u20132+ Years)",
+          "description": "Strategic asset holding season anchored to 200-day moving average regime, macro stress survival, and 1-year annual horizons."
+        },
+        "run_id": "run_bf61ab5b43ce",
+        "trace_id": "trace_32f8f96f29c740c2",
+        "workflow_status": "completed",
+        "market_data_courier": {
+          "source": "yahoo_finance",
+          "bar_count": 500,
+          "start_date": "2024-11-07",
+          "end_date": "2026-11-16",
+          "latest_close": 1145.1,
+          "data_quality": "valid",
+          "is_stale": false,
+          "freshness_age_days": 0
+        },
+        "technical_agent": {
+          "signal": "BEARISH",
+          "confidence": 0.33,
+          "indicators": {
+            "sma_20": 1139.9515,
+            "sma_50": 1069.9878,
+            "sma_200": 1153.4047,
+            "ema_12": 1143.0488,
+            "ema_26": 1118.8086,
+            "macd_line": 24.2403,
+            "macd_signal": 26.8469,
+            "macd_hist": -2.6066,
+            "rsi_14": 56.1684,
+            "bb_upper": 1178.1081,
+            "bb_middle": 1139.9515,
+            "bb_lower": 1101.7949,
+            "bb_bandwidth": 6.6944,
+            "atr_14": 35.8484
+          },
+          "summary": "[Google ADK TechnicalAgent / Runner Session sess_cc5bcd37 / LONG TERM] Review for INFY.NS: Close=1145.1 INR, SMA-20=1139.9515, SMA-50=1069.9878, SMA-200=1153.4047, RSI-14=56.1684, MACD Hist=-2.6066. Overall signal: BEARISH (33% confidence)."
+        },
+        "news_sentiment_agent": {
+          "overall_sentiment": "MIXED",
+          "sentiment_score": 0.0,
+          "total_articles": 10,
+          "positive_count": 2,
+          "negative_count": 2,
+          "risk_observations": [
+            "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+            "[LONG TERM] Long-term news weighting: focus on corporate governance, regulatory stability, and secular fundamentals."
+          ]
+        },
+        "forecasting_agent": {
+          "status": "available",
+          "best_model": "ExponentialSmoothing",
+          "model_divergence_pct": 0.0,
+          "directional_consensus": "NEUTRAL",
+          "validation_rmse": 15.7775,
+          "validation_directional_accuracy": 60.0,
+          "forecast_window": "1_year",
+          "projections": [
+            {
+              "horizon_trading_days": 21,
+              "target_date": "2026-12-16",
+              "predicted_price": 1141.5402,
+              "predicted_change_pct": -0.31,
+              "confidence_interval_95": [
+                924.6784,
+                1358.4021
+              ]
+            },
+            {
+              "horizon_trading_days": 63,
+              "target_date": "2027-02-16",
+              "predicted_price": 1135.6562,
+              "predicted_change_pct": -0.82,
+              "confidence_interval_95": [
+                760.0405,
+                1511.2719
+              ]
+            },
+            {
+              "horizon_trading_days": 126,
+              "target_date": "2027-05-19",
+              "predicted_price": 1128.8567,
+              "predicted_change_pct": -1.42,
+              "confidence_interval_95": [
+                597.6559,
+                1660.0575
+              ]
+            },
+            {
+              "horizon_trading_days": 252,
+              "target_date": "2027-11-12",
+              "predicted_price": 1120.2827,
+              "predicted_change_pct": -2.17,
+              "confidence_interval_95": [
+                369.0513,
+                1871.5141
+              ]
+            }
+          ]
+        },
+        "risk_engine": {
+          "overall_risk_level": "LOW",
+          "composite_risk_score": 0.186,
+          "recommendation": "APPROVED",
+          "warnings": [
+            "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+          ],
+          "reasons": [
+            "Evaluated under institutional [LONG TERM] risk mandate.",
+            "Asset suffered substantial peak-to-trough decline of 50.73%.",
+            "Optimal risk profile across price sanity, drawdown, and technical metrics."
+          ]
+        },
+        "scenario_simulation_agent": {
+          "total_scenarios": 23,
+          "worst_case_scenario": "Severe Market Crash",
+          "worst_case_risk_score": 0.698,
+          "monte_carlo": {
+            "horizon_days": 252,
+            "num_simulations": 1000,
+            "initial_price": 1145.1,
+            "mean_terminal_price": 902.0,
+            "median_terminal_price": 875.27,
+            "quantiles": {
+              "p5": 538.51,
+              "p25": 715.4,
+              "p75": 1034.97,
+              "p95": 1389.64
+            },
+            "probability_loss_pct": 85.0,
+            "probability_severe_loss_pct": 74.4,
+            "expected_annualized_volatility": 28.71
+          }
+        },
+        "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / LONG TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for INFY.NS. Technical momentum is BEARISH with 33% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of LOW with recommendation 'APPROVED' (Composite Risk Score: 0.19)."
+      }
+    },
+    "comparative_matrix": [
+      {
+        "horizon": "short_term",
+        "forecast_window": "1_month",
+        "lookback_bars": 100,
+        "latest_close": 1145.1,
+        "technical_signal": "BULLISH (80%)",
+        "best_forecaster": "ARIMA",
+        "terminal_forecast_change": "+0.00%",
+        "risk_score": 0.136,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "mc_horizon_days": 20,
+        "mc_loss_prob": "41.9%"
+      },
+      {
+        "horizon": "mid_term",
+        "forecast_window": "3_months",
+        "lookback_bars": 200,
+        "latest_close": 1145.1,
+        "technical_signal": "BULLISH (75%)",
+        "best_forecaster": "ExponentialSmoothing",
+        "terminal_forecast_change": "-0.07%",
+        "risk_score": 0.186,
+        "recommendation": "APPROVED",
+        "mc_horizon_days": 63,
+        "mc_loss_prob": "80.3%"
+      },
+      {
+        "horizon": "long_term",
+        "forecast_window": "1_year",
+        "lookback_bars": 500,
+        "latest_close": 1145.1,
+        "technical_signal": "BEARISH (33%)",
+        "best_forecaster": "ExponentialSmoothing",
+        "terminal_forecast_change": "-2.17%",
+        "risk_score": 0.186,
+        "recommendation": "APPROVED",
+        "mc_horizon_days": 252,
+        "mc_loss_prob": "85.0%"
+      }
+    ]
+  },
+  "horizon_runs": {
+    "short_term": {
+      "configuration": {
+        "horizon": "short_term",
+        "forecast_horizon": "1_month",
+        "lookback_days": 100,
+        "label": "Short-Term Tactical Momentum (1\u201330 Days)",
+        "description": "Tactical trading season focusing on fast RSI momentum, ATR breakout, and 1-month predictive price paths."
+      },
+      "run_id": "run_b62868538069",
+      "trace_id": "trace_eab84ebe76aa4a2c",
+      "workflow_status": "completed",
+      "market_data_courier": {
+        "source": "yahoo_finance",
+        "bar_count": 100,
+        "start_date": "2026-06-23",
+        "end_date": "2026-11-16",
+        "latest_close": 2405.0,
+        "data_quality": "incomplete",
+        "is_stale": false,
+        "freshness_age_days": 0
+      },
+      "technical_agent": {
+        "signal": "BEARISH",
+        "confidence": 0.4,
+        "indicators": {
+          "sma_20": 2479.885,
+          "sma_50": 2288.4008,
+          "sma_200": null,
+          "ema_12": 2447.1643,
+          "ema_26": 2405.2421,
+          "macd_line": 41.9222,
+          "macd_signal": 61.8981,
+          "macd_hist": -19.976,
+          "rsi_14": 50.3986,
+          "bb_upper": 2552.2432,
+          "bb_middle": 2479.885,
+          "bb_lower": 2407.5268,
+          "bb_bandwidth": 5.8356,
+          "atr_14": 66.5006
+        },
+        "summary": "[Google ADK TechnicalAgent / Runner Session sess_7eacfedb / SHORT TERM] Review for TCS.NS: Close=2405.0 INR, SMA-20=2479.885, SMA-50=2288.4008, SMA-200=None, RSI-14=50.3986, MACD Hist=-19.976. Overall signal: BEARISH (40% confidence)."
+      },
+      "news_sentiment_agent": {
+        "overall_sentiment": "POSITIVE",
+        "sentiment_score": 0.3,
+        "total_articles": 10,
+        "positive_count": 3,
+        "negative_count": 0,
+        "risk_observations": [
+          "Supportive media consensus (3/10 articles positive, zero negative).",
+          "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+          "[SHORT TERM] Short-term news weighting: high sensitivity to breaking catalysts, headlines, and immediate sentiment momentum."
+        ]
+      },
+      "forecasting_agent": {
+        "status": "available",
+        "best_model": "ARIMA",
+        "model_divergence_pct": 4.36,
+        "directional_consensus": "MIXED",
+        "validation_rmse": 53.27,
+        "validation_directional_accuracy": 20.0,
+        "forecast_window": "1_month",
+        "projections": [
+          {
+            "horizon_trading_days": 1,
+            "target_date": "2026-11-17",
+            "predicted_price": 2405.0,
+            "predicted_change_pct": 0.0,
+            "confidence_interval_95": [
+              2316.6439,
+              2493.3561
+            ]
+          },
+          {
+            "horizon_trading_days": 5,
+            "target_date": "2026-11-23",
+            "predicted_price": 2405.0,
+            "predicted_change_pct": 0.0,
+            "confidence_interval_95": [
+              2207.4299,
+              2602.5701
+            ]
+          },
+          {
+            "horizon_trading_days": 10,
+            "target_date": "2026-12-01",
+            "predicted_price": 2405.0,
+            "predicted_change_pct": 0.0,
+            "confidence_interval_95": [
+              2125.5936,
+              2684.4064
+            ]
+          },
+          {
+            "horizon_trading_days": 21,
+            "target_date": "2026-12-16",
+            "predicted_price": 2405.0,
+            "predicted_change_pct": 0.0,
+            "confidence_interval_95": [
+              2000.1017,
+              2809.8983
+            ]
+          }
+        ]
+      },
+      "risk_engine": {
+        "overall_risk_level": "MODERATE",
+        "composite_risk_score": 0.107,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "warnings": [
+          "Lookback limited to 100 bars; 200-day trend context unavailable.",
+          "Low validation directional accuracy (20.0%): ARIMA trend direction carries elevated uncertainty.",
+          "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+        ],
+        "reasons": [
+          "Evaluated under institutional [SHORT TERM] risk mandate.",
+          "Supportive media sentiment (3 positive reports) provides positive institutional context.",
+          "Passes institutional safety criteria with noted cautionary flags."
+        ]
+      },
+      "scenario_simulation_agent": {
+        "total_scenarios": 23,
+        "worst_case_scenario": "Severe Market Crash",
+        "worst_case_risk_score": 0.698,
+        "monte_carlo": {
+          "horizon_days": 20,
+          "num_simulations": 1000,
+          "initial_price": 2405.0,
+          "mean_terminal_price": 2474.91,
+          "median_terminal_price": 2473.06,
+          "quantiles": {
+            "p5": 2127.12,
+            "p25": 2323.06,
+            "p75": 2605.03,
+            "p95": 2854.39
+          },
+          "probability_loss_pct": 38.0,
+          "probability_severe_loss_pct": 7.1,
+          "expected_annualized_volatility": 31.62
+        }
+      },
+      "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / SHORT TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for TCS.NS. Technical momentum is BEARISH with 40% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.11)."
+    },
+    "mid_term": {
+      "configuration": {
+        "horizon": "mid_term",
+        "forecast_horizon": "3_months",
+        "lookback_days": 200,
+        "label": "Mid-Term Positional Trend (1\u20136 Months)",
+        "description": "Positional swing/quarterly trend season focusing on SMA 20/50 alignment, MACD cycle, and quarterly earnings trajectory."
+      },
+      "run_id": "run_5af296642ff2",
+      "trace_id": "trace_73f6634fd7544f20",
+      "workflow_status": "completed",
+      "market_data_courier": {
+        "source": "yahoo_finance",
+        "bar_count": 200,
+        "start_date": "2026-01-22",
+        "end_date": "2026-11-16",
+        "latest_close": 2405.0,
+        "data_quality": "valid",
+        "is_stale": false,
+        "freshness_age_days": 0
+      },
+      "technical_agent": {
+        "signal": "BULLISH",
+        "confidence": 0.75,
+        "indicators": {
+          "sma_20": 2479.885,
+          "sma_50": 2288.4008,
+          "sma_200": 2362.8382,
+          "ema_12": 2447.1643,
+          "ema_26": 2405.4452,
+          "macd_line": 41.7191,
+          "macd_signal": 61.5995,
+          "macd_hist": -19.8804,
+          "rsi_14": 50.3818,
+          "bb_upper": 2552.2432,
+          "bb_middle": 2479.885,
+          "bb_lower": 2407.5268,
+          "bb_bandwidth": 5.8356,
+          "atr_14": 66.499
+        },
+        "summary": "[Google ADK TechnicalAgent / Runner Session sess_63f4822e / MID TERM] Review for TCS.NS: Close=2405.0 INR, SMA-20=2479.885, SMA-50=2288.4008, SMA-200=2362.8382, RSI-14=50.3818, MACD Hist=-19.8804. Overall signal: BULLISH (75% confidence)."
+      },
+      "news_sentiment_agent": {
+        "overall_sentiment": "POSITIVE",
+        "sentiment_score": 0.3,
+        "total_articles": 10,
+        "positive_count": 3,
+        "negative_count": 0,
+        "risk_observations": [
+          "Supportive media consensus (3/10 articles positive, zero negative).",
+          "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+          "[MID TERM] Mid-term news weighting: focus on quarterly earnings trends, sector rotation, and monetary policy."
+        ]
+      },
+      "forecasting_agent": {
+        "status": "available",
+        "best_model": "ExponentialSmoothing",
+        "model_divergence_pct": 0.0,
+        "directional_consensus": "NEUTRAL",
+        "validation_rmse": 51.3157,
+        "validation_directional_accuracy": 40.0,
+        "forecast_window": "3_months",
+        "projections": [
+          {
+            "horizon_trading_days": 5,
+            "target_date": "2026-11-23",
+            "predicted_price": 2405.0164,
+            "predicted_change_pct": 0.0,
+            "confidence_interval_95": [
+              2194.3356,
+              2615.6972
+            ]
+          },
+          {
+            "horizon_trading_days": 21,
+            "target_date": "2026-12-16",
+            "predicted_price": 2404.0535,
+            "predicted_change_pct": -0.04,
+            "confidence_interval_95": [
+              1972.2863,
+              2835.8207
+            ]
+          },
+          {
+            "horizon_trading_days": 42,
+            "target_date": "2027-01-15",
+            "predicted_price": 2403.3058,
+            "predicted_change_pct": -0.07,
+            "confidence_interval_95": [
+              1792.6947,
+              3013.9168
+            ]
+          },
+          {
+            "horizon_trading_days": 63,
+            "target_date": "2027-02-16",
+            "predicted_price": 2402.8966,
+            "predicted_change_pct": -0.09,
+            "confidence_interval_95": [
+              1655.0539,
+              3150.7393
+            ]
+          }
+        ]
+      },
+      "risk_engine": {
+        "overall_risk_level": "MODERATE",
+        "composite_risk_score": 0.164,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "warnings": [
+          "Low validation directional accuracy (40.0%): ExponentialSmoothing trend direction carries elevated uncertainty.",
+          "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+        ],
+        "reasons": [
+          "Evaluated under institutional [MID TERM] risk mandate.",
+          "Asset suffered substantial peak-to-trough decline of 38.53%.",
+          "Supportive media sentiment (3 positive reports) provides positive institutional context.",
+          "Passes institutional safety criteria with noted cautionary flags."
+        ]
+      },
+      "scenario_simulation_agent": {
+        "total_scenarios": 23,
+        "worst_case_scenario": "Severe Market Crash",
+        "worst_case_risk_score": 0.698,
+        "monte_carlo": {
+          "horizon_days": 63,
+          "num_simulations": 1000,
+          "initial_price": 2405.0,
+          "mean_terminal_price": 2196.96,
+          "median_terminal_price": 2181.38,
+          "quantiles": {
+            "p5": 1658.46,
+            "p25": 1946.74,
+            "p75": 2397.72,
+            "p95": 2831.44
+          },
+          "probability_loss_pct": 75.1,
+          "probability_severe_loss_pct": 48.7,
+          "expected_annualized_volatility": 32.4
+        }
+      },
+      "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / MID TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for TCS.NS. Technical momentum is BULLISH with 75% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.16)."
+    },
+    "long_term": {
+      "configuration": {
+        "horizon": "long_term",
+        "forecast_horizon": "1_year",
+        "lookback_days": 500,
+        "label": "Long-Term Strategic Fundamental (1\u20132+ Years)",
+        "description": "Strategic asset holding season anchored to 200-day moving average regime, macro stress survival, and 1-year annual horizons."
+      },
+      "run_id": "run_642db5e60751",
+      "trace_id": "trace_21bb7e6bb0534092",
+      "workflow_status": "completed",
+      "market_data_courier": {
+        "source": "yahoo_finance",
+        "bar_count": 500,
+        "start_date": "2024-11-07",
+        "end_date": "2026-11-16",
+        "latest_close": 2405.0,
+        "data_quality": "valid",
+        "is_stale": false,
+        "freshness_age_days": 0
+      },
+      "technical_agent": {
+        "signal": "BULLISH",
+        "confidence": 0.67,
+        "indicators": {
+          "sma_20": 2479.885,
+          "sma_50": 2288.4008,
+          "sma_200": 2362.8382,
+          "ema_12": 2447.1643,
+          "ema_26": 2405.4451,
+          "macd_line": 41.7192,
+          "macd_signal": 61.5996,
+          "macd_hist": -19.8804,
+          "rsi_14": 50.3818,
+          "bb_upper": 2552.2432,
+          "bb_middle": 2479.885,
+          "bb_lower": 2407.5268,
+          "bb_bandwidth": 5.8356,
+          "atr_14": 66.499
+        },
+        "summary": "[Google ADK TechnicalAgent / Runner Session sess_e30c6325 / LONG TERM] Review for TCS.NS: Close=2405.0 INR, SMA-20=2479.885, SMA-50=2288.4008, SMA-200=2362.8382, RSI-14=50.3818, MACD Hist=-19.8804. Overall signal: BULLISH (67% confidence)."
+      },
+      "news_sentiment_agent": {
+        "overall_sentiment": "POSITIVE",
+        "sentiment_score": 0.3,
+        "total_articles": 10,
+        "positive_count": 3,
+        "negative_count": 0,
+        "risk_observations": [
+          "Supportive media consensus (3/10 articles positive, zero negative).",
+          "Media sentiment reflects short-term market perception; does not guarantee future price movement.",
+          "[LONG TERM] Long-term news weighting: focus on corporate governance, regulatory stability, and secular fundamentals."
+        ]
+      },
+      "forecasting_agent": {
+        "status": "available",
+        "best_model": "ExponentialSmoothing",
+        "model_divergence_pct": 0.0,
+        "directional_consensus": "NEUTRAL",
+        "validation_rmse": 49.9751,
+        "validation_directional_accuracy": 40.0,
+        "forecast_window": "1_year",
+        "projections": [
+          {
+            "horizon_trading_days": 21,
+            "target_date": "2026-12-16",
+            "predicted_price": 2394.3311,
+            "predicted_change_pct": -0.44,
+            "confidence_interval_95": [
+              1987.8755,
+              2800.7868
+            ]
+          },
+          {
+            "horizon_trading_days": 63,
+            "target_date": "2027-02-16",
+            "predicted_price": 2376.0051,
+            "predicted_change_pct": -1.21,
+            "confidence_interval_95": [
+              1672.0033,
+              3080.0069
+            ]
+          },
+          {
+            "horizon_trading_days": 126,
+            "target_date": "2027-05-19",
+            "predicted_price": 2354.8276,
+            "predicted_change_pct": -2.09,
+            "confidence_interval_95": [
+              1359.2187,
+              3350.4365
+            ]
+          },
+          {
+            "horizon_trading_days": 252,
+            "target_date": "2027-11-12",
+            "predicted_price": 2328.1237,
+            "predicted_change_pct": -3.2,
+            "confidence_interval_95": [
+              920.12,
+              3736.1273
+            ]
+          }
+        ]
+      },
+      "risk_engine": {
+        "overall_risk_level": "MODERATE",
+        "composite_risk_score": 0.214,
+        "recommendation": "APPROVED_WITH_CAUTION",
+        "warnings": [
+          "Forward projection indicates moderate downward pressure (-3.2% over 252 sessions).",
+          "Low validation directional accuracy (40.0%): ExponentialSmoothing trend direction carries elevated uncertainty.",
+          "Gate 8 Tail Hazard: Severe market stress (Severe Market Crash) escalates simulated risk to REJECTED_HIGH_RISK."
+        ],
+        "reasons": [
+          "Evaluated under institutional [LONG TERM] risk mandate.",
+          "Asset suffered substantial peak-to-trough decline of 55.69%.",
+          "Supportive media sentiment (3 positive reports) provides positive institutional context.",
+          "Passes institutional safety criteria with noted cautionary flags."
+        ]
+      },
+      "scenario_simulation_agent": {
+        "total_scenarios": 23,
+        "worst_case_scenario": "Severe Market Crash",
+        "worst_case_risk_score": 0.698,
+        "monte_carlo": {
+          "horizon_days": 252,
+          "num_simulations": 1000,
+          "initial_price": 2405.0,
+          "mean_terminal_price": 1810.58,
+          "median_terminal_price": 1769.04,
+          "quantiles": {
+            "p5": 1144.85,
+            "p25": 1476.6,
+            "p75": 2055.62,
+            "p95": 2676.67
+          },
+          "probability_loss_pct": 89.1,
+          "probability_severe_loss_pct": 80.4,
+          "expected_annualized_volatility": 25.72
+        }
+      },
+      "orchestrator_summary": "[DETERMINISTIC STUB EVALUATION / LONG TERM HORIZON] Institutional StockShield 2.0 Risk Assessment for TCS.NS. Technical momentum is BULLISH with 67% algorithmic confidence. Deterministic risk governance assigns an overall risk grade of MODERATE with recommendation 'APPROVED_WITH_CAUTION' (Composite Risk Score: 0.21)."
+    }
+  },
+  "comparative_matrix": [
+    {
+      "horizon": "short_term",
+      "forecast_window": "1_month",
+      "lookback_bars": 100,
+      "latest_close": 2405.0,
+      "technical_signal": "BEARISH (40%)",
+      "best_forecaster": "ARIMA",
+      "terminal_forecast_change": "+0.00%",
+      "risk_score": 0.107,
+      "recommendation": "APPROVED_WITH_CAUTION",
+      "mc_horizon_days": 20,
+      "mc_loss_prob": "38.0%"
+    },
+    {
+      "horizon": "mid_term",
+      "forecast_window": "3_months",
+      "lookback_bars": 200,
+      "latest_close": 2405.0,
+      "technical_signal": "BULLISH (75%)",
+      "best_forecaster": "ExponentialSmoothing",
+      "terminal_forecast_change": "-0.09%",
+      "risk_score": 0.164,
+      "recommendation": "APPROVED_WITH_CAUTION",
+      "mc_horizon_days": 63,
+      "mc_loss_prob": "75.1%"
+    },
+    {
+      "horizon": "long_term",
+      "forecast_window": "1_year",
+      "lookback_bars": 500,
+      "latest_close": 2405.0,
+      "technical_signal": "BULLISH (67%)",
+      "best_forecaster": "ExponentialSmoothing",
+      "terminal_forecast_change": "-3.20%",
+      "risk_score": 0.214,
+      "recommendation": "APPROVED_WITH_CAUTION",
+      "mc_horizon_days": 252,
+      "mc_loss_prob": "89.1%"
+    }
+  ]
+}
