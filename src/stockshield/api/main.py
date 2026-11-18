@@ -135,6 +135,7 @@ class HealthResponse(BaseModel):
 
 
 @app.get("/health", response_model=HealthResponse)
+@app.get("/healthz", response_model=HealthResponse)
 async def health_check():
     """Liveness and health readiness probe."""
     return HealthResponse(
