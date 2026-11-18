@@ -17,10 +17,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt pyproject.toml ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code, config, and data fixtures
+# Copy source code, config, data fixtures, and modern Frontend
 COPY src/ /app/src/
 COPY config/ /app/config/
 COPY data/ /app/data/
+COPY Frontend/ /app/Frontend/
 
 # Expose API port
 EXPOSE 8000

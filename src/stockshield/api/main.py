@@ -9,6 +9,7 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from stockshield import __version__
@@ -39,14 +40,35 @@ _workflow = StockShieldWorkflow()
 _STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 _INDEX_HTML_PATH = _STATIC_DIR / "index.html"
 
+# Discover modern Frontend directory (in project root)
+_FRONTEND_DIR = Path(__file__).resolve().parents[3] / "Frontend"
+_FRONTEND_INDEX_PATH = _FRONTEND_DIR / "index.html"
+
+# Mount static asset directories for the modern Frontend
+if _FRONTEND_DIR.exists():
+    for sub in ["css", "js", "assets"]:
+        subdir = _FRONTEND_DIR / sub
+        if subdir.exists():
+            app.mount(f"/{sub}", StaticFiles(directory=str(subdir)), name=sub)
+
 
 @app.get("/", response_class=HTMLResponse)
 @app.get("/dashboard", response_class=HTMLResponse)
 async def serve_dashboard():
-    """Serve the interactive visual whiteboard dashboard."""
+    """Serve the modern StockShield frontend dashboard."""
+    if _FRONTEND_INDEX_PATH.exists():
+        return HTMLResponse(content=_FRONTEND_INDEX_PATH.read_text(encoding="utf-8"))
     if _INDEX_HTML_PATH.exists():
         return HTMLResponse(content=_INDEX_HTML_PATH.read_text(encoding="utf-8"))
-    return HTMLResponse("<h2>StockShield 2.0 Dashboard not found.</h2>", status_code=404)
+    return HTMLResponse("<h2>StockShield Dashboard not found.</h2>", status_code=404)
+
+
+@app.get("/whiteboard", response_class=HTMLResponse)
+async def serve_whiteboard():
+    """Serve the visual whiteboard dashboard."""
+    if _INDEX_HTML_PATH.exists():
+        return HTMLResponse(content=_INDEX_HTML_PATH.read_text(encoding="utf-8"))
+    return HTMLResponse("<h2>StockShield Whiteboard not found.</h2>", status_code=404)
 
 
 class AnalysisRequestPayload(BaseModel):
