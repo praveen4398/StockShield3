@@ -74,3 +74,5 @@ evaluation_results/logs/
 
 # Test-generated Temporary Snapshots
 evaluation_results/snapshots/test_verify_*.json
+
+.localappdata/

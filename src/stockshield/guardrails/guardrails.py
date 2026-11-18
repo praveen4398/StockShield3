@@ -5,6 +5,119 @@ from typing import Any, Dict, Optional, Tuple
 
 from pydantic import BaseModel, Field, field_validator
 
+COMPANY_NAME_TO_TICKER = {
+    "TATA STEEL": "TATASTEEL",
+    "TATA MOTORS": "TATAMOTORS",
+    "TCS": "TCS",
+    "TATA CONSULTANCY SERVICES": "TCS",
+    "TATA POWER": "TATAPOWER",
+    "TATA CONSUMER": "TATACONSUM",
+    "TATA CONSUMER PRODUCTS": "TATACONSUM",
+    "TATA TECHNOLOGIES": "TATATECH",
+    "TRENT": "TRENT",
+    "TITAN": "TITAN",
+    "TITAN COMPANY": "TITAN",
+    "RELIANCE": "RELIANCE",
+    "RELIANCE INDUSTRIES": "RELIANCE",
+    "JIO FINANCIAL": "JIOFIN",
+    "JIO FINANCIAL SERVICES": "JIOFIN",
+    "HDFC": "HDFCBANK",
+    "HDFC BANK": "HDFCBANK",
+    "HDFCBANK": "HDFCBANK",
+    "INFOSYS": "INFY",
+    "INFY": "INFY",
+    "ICICI": "ICICIBANK",
+    "ICICI BANK": "ICICIBANK",
+    "ICICIBANK": "ICICIBANK",
+    "SBI": "SBIN",
+    "STATE BANK OF INDIA": "SBIN",
+    "STATE BANK": "SBIN",
+    "SBIN": "SBIN",
+    "WIPRO": "WIPRO",
+    "BAJAJ FINANCE": "BAJFINANCE",
+    "BAJFINANCE": "BAJFINANCE",
+    "BAJAJ FINSERV": "BAJAJFINSV",
+    "BAJAJ AUTO": "BAJAJ-AUTO",
+    "BHARTI AIRTEL": "BHARTIARTL",
+    "AIRTEL": "BHARTIARTL",
+    "LARSEN & TOUBRO": "LT",
+    "LARSEN AND TOUBRO": "LT",
+    "L&T": "LT",
+    "LT": "LT",
+    "HINDUSTAN UNILEVER": "HINDUNILVR",
+    "HUL": "HINDUNILVR",
+    "ITC": "ITC",
+    "ITC LIMITED": "ITC",
+    "ASIAN PAINTS": "ASIANPAINT",
+    "MARUTI": "MARUTI",
+    "MARUTI SUZUKI": "MARUTI",
+    "SUN PHARMA": "SUNPHARMA",
+    "CIPLA": "CIPLA",
+    "DR REDDY": "DRREDDY",
+    "DR REDDYS": "DRREDDY",
+    "DR REDDY'S": "DRREDDY",
+    "APOLLO HOSPITALS": "APOLLOHOSP",
+    "DIVIS LAB": "DIVISLAB",
+    "DIVIS LABORATORIES": "DIVISLAB",
+    "AXIS BANK": "AXISBANK",
+    "KOTAK": "KOTAKBANK",
+    "KOTAK BANK": "KOTAKBANK",
+    "KOTAK MAHINDRA BANK": "KOTAKBANK",
+    "NTPC": "NTPC",
+    "POWER GRID": "POWERGRID",
+    "ONGC": "ONGC",
+    "COAL INDIA": "COALINDIA",
+    "ADANI ENTERPRISES": "ADANIENT",
+    "ADANI PORTS": "ADANIPORTS",
+    "ADANI POWER": "ADANIPOWER",
+    "ADANI GREEN": "ADANIGREEN",
+    "ULTRATECH CEMENT": "ULTRACEMCO",
+    "ULTRATECH": "ULTRACEMCO",
+    "GRASIM": "GRASIM",
+    "JSW STEEL": "JSWSTEEL",
+    "HINDALCO": "HINDALCO",
+    "VEDANTA": "VEDL",
+    "TECH MAHINDRA": "TECHM",
+    "HCL TECH": "HCLTECH",
+    "HCL TECHNOLOGIES": "HCLTECH",
+    "EICHER MOTORS": "EICHERMOT",
+    "HERO MOTOCORP": "HEROMOTOCO",
+    "BRITANNIA": "BRITANNIA",
+    "NESTLE": "NESTLEIND",
+    "NESTLE INDIA": "NESTLEIND",
+    "BHARAT ELECTRONICS": "BEL",
+    "BEL": "BEL",
+    "HINDUSTAN AERONAUTICS": "HAL",
+    "HAL": "HAL",
+    "BHEL": "BHEL",
+    "DLF": "DLF",
+    "ZOMATO": "ZOMATO",
+    "SWIGGY": "SWIGGY",
+    "PAYTM": "PAYTM",
+    "IRCTC": "IRCTC",
+    "RVNL": "RVNL",
+    "IRFC": "IRFC",
+    "SUZLON": "SUZLON",
+    "PNB": "PNB",
+    "PUNJAB NATIONAL BANK": "PNB",
+    "BANK OF BARODA": "BANKBARODA",
+    "FEDERAL BANK": "FEDERALBNK",
+    "IDFC FIRST BANK": "IDFCFIRSTB",
+    "YES BANK": "YESBANK",
+    "INDUSIND BANK": "INDUSINDBK",
+    "BPCL": "BPCL",
+    "IOC": "IOC",
+    "INDIAN OIL": "IOC",
+    "HPCL": "HPCL",
+    "SAIL": "SAIL",
+    "VBL": "VBL",
+    "VARUN BEVERAGES": "VBL",
+    "PIDILITE": "PIDILITIND",
+    "HAVELLS": "HAVELLS",
+    "SIEMENS": "SIEMENS",
+    "ABB": "ABB"
+}
+
 ALLOWED_TICKERS = {"TCS.NS", "INFY.NS", "RELIANCE.NS"}
 MAX_LOOKBACK_DAYS = 500
 MIN_LOOKBACK_DAYS = 10
@@ -45,11 +158,26 @@ class UserAnalysisRequest(BaseModel):
     @field_validator("ticker")
     @classmethod
     def validate_ticker_format(cls, v: str) -> str:
-        cleaned = v.strip().upper()
+        raw = v.strip().upper()
+        # If user passed "Tata Steel (TATASTEEL)", extract inside parentheses
+        match_paren = re.search(r"\(([A-Z0-9\-_]+)\)", raw)
+        if match_paren:
+            raw = match_paren.group(1)
+
+        # Check if company name matches mapping
+        if raw in COMPANY_NAME_TO_TICKER:
+            raw = COMPANY_NAME_TO_TICKER[raw]
+        else:
+            # Check without .NS if present in raw
+            clean_name = raw.replace(".NS", "").replace(".BO", "").strip()
+            if clean_name in COMPANY_NAME_TO_TICKER:
+                raw = COMPANY_NAME_TO_TICKER[clean_name]
+
+        cleaned = raw
         if "." not in cleaned:
             cleaned = f"{cleaned}.NS"
-        if not re.match(r"^[A-Z0-9\-_]{1,12}\.(NS|BO)$", cleaned):
-            raise ValueError(f"Ticker symbol '{v}' is not a valid NSE/BSE ticker format.")
+        if not re.match(r"^[A-Z0-9\-_]{1,16}\.(NS|BO)$", cleaned):
+            raise ValueError(f"Ticker symbol '{v}' could not be resolved to a valid NSE/BSE ticker.")
         return cleaned
 
     @field_validator("provider_mode")
