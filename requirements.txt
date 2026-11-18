@@ -35,7 +35,6 @@ flatbuffers==25.12.19
 fonttools==4.68.0
 frozenlist==1.8.0
 fsspec==2026.9.0
-google-adk==2.13.0
 google-auth==2.62.0
 google-genai==2.34.0
 google-re2==1.1.20251105
@@ -85,14 +84,14 @@ oauthlib==4.0.0
 onnxruntime==1.31.1
 openai==2.54.0
 openpyxl==3.1.5
-opentelemetry-api==1.44.0
+opentelemetry-api==1.45.1
 opentelemetry-exporter-http-transport==0.66b1
 opentelemetry-exporter-otlp-common==0.66b1
 opentelemetry-exporter-otlp-proto-common==1.45.1
 opentelemetry-exporter-otlp-proto-grpc==1.45.1
 opentelemetry-exporter-otlp-proto-http==1.45.1
 opentelemetry-proto==1.45.1
-opentelemetry-sdk==1.44.0
+opentelemetry-sdk==1.45.1
 opentelemetry-semantic-conventions==0.65b0
 orjson==3.13.0
 overrides==7.7.0
