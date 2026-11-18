@@ -21,8 +21,8 @@ from google.genai import types
 from stockshield.geni.models import GeniMessage, MessageRole
 from stockshield.geni.prompt import GENI_SYSTEM_INSTRUCTION
 
-DEFAULT_GENI_MODEL = "gemini-3.8-flash"
-GENI_FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3-flash-preview"]
+DEFAULT_GENI_MODEL = "gemini-3.5-flash"
+GENI_FALLBACK_MODELS = ["gemini-3.8-flash", "gemini-3-flash-preview"]
 
 
 class GeniClient:

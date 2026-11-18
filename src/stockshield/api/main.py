@@ -77,7 +77,7 @@ class AnalysisRequestPayload(BaseModel):
         description="Market data provider mode: 'auto' (fixture if available, else Yahoo Finance), 'fixture' (offline), or 'live' (Yahoo Finance)",
     )
     enable_judge: Optional[bool] = Field(
-        default=None,
+        default=True,
         description="Whether to execute Gemini LLM-as-a-Judge post-analysis evaluation. If None, inherits LLM_JUDGE_ENABLED setting.",
     )
     custom_scenarios: Optional[List[CustomScenarioInput]] = Field(
@@ -155,6 +155,101 @@ async def get_adk_agent_card():
     return _workflow.technical_agent.get_agent_card()
 
 
+# ---------------------------------------------------------------------------
+# Live Ticker Tape Market Data Endpoint
+# ---------------------------------------------------------------------------
+_DEFAULT_TICKER_ITEMS = [
+    {"sym": "NIFTY50", "display": "NIFTY50", "ticker": "^NSEI", "price": "24,850.30", "change": "+0.45%", "is_up": True, "is_index": True},
+    {"sym": "SENSEX", "display": "SENSEX", "ticker": "^BSESN", "price": "81,520.10", "change": "+0.38%", "is_up": True, "is_index": True},
+    {"sym": "TCS", "display": "TCS", "ticker": "TCS.NS", "price": "₹3,842.50", "change": "+1.20%", "is_up": True, "is_index": False},
+    {"sym": "INFY", "display": "INFY", "ticker": "INFY.NS", "price": "₹1,648.90", "change": "-0.40%", "is_up": False, "is_index": False},
+    {"sym": "RELIANCE", "display": "RELIANCE", "ticker": "RELIANCE.NS", "price": "₹2,934.60", "change": "+0.80%", "is_up": True, "is_index": False},
+    {"sym": "HDFCBANK", "display": "HDFCBANK", "ticker": "HDFCBANK.NS", "price": "₹1,789.40", "change": "+1.50%", "is_up": True, "is_index": False},
+    {"sym": "WIPRO", "display": "WIPRO", "ticker": "WIPRO.NS", "price": "₹298.75", "change": "-0.90%", "is_up": False, "is_index": False},
+    {"sym": "ICICIBANK", "display": "ICICIBANK", "ticker": "ICICIBANK.NS", "price": "₹1,245.30", "change": "+0.60%", "is_up": True, "is_index": False},
+    {"sym": "BAJFINANCE", "display": "BAJFINANCE", "ticker": "BAJFINANCE.NS", "price": "₹7,129.80", "change": "+2.10%", "is_up": True, "is_index": False},
+    {"sym": "SBIN", "display": "SBIN", "ticker": "SBIN.NS", "price": "₹852.40", "change": "-0.30%", "is_up": False, "is_index": False},
+    {"sym": "TATAMOTORS", "display": "TATAMOTORS", "ticker": "TATAMOTORS.NS", "price": "₹978.30", "change": "+1.40%", "is_up": True, "is_index": False},
+    {"sym": "TATASTEEL", "display": "TATASTEEL", "ticker": "TATASTEEL.NS", "price": "₹152.60", "change": "+0.75%", "is_up": True, "is_index": False},
+]
+
+_ticker_cache = {
+    "last_updated": 0.0,
+    "items": _DEFAULT_TICKER_ITEMS.copy(),
+    "source": "baseline",
+    "is_refreshing": False,
+}
+
+
+def _refresh_ticker_cache_worker():
+    """Background worker to fetch latest prices from Yahoo Finance without blocking HTTP requests."""
+    try:
+        import time
+        import yfinance as yf
+        tickers = [item["ticker"] for item in _DEFAULT_TICKER_ITEMS]
+        df = yf.download(tickers, period="5d", interval="1d", progress=False, timeout=8)
+        if df is not None and not df.empty and "Close" in df:
+            close_df = df["Close"]
+            updated = []
+            for item in _DEFAULT_TICKER_ITEMS:
+                sym_ticker = item["ticker"]
+                display = item["display"]
+                is_index = item["is_index"]
+                prefix = "" if is_index else "₹"
+                try:
+                    if sym_ticker in close_df:
+                        series = close_df[sym_ticker].dropna()
+                        if len(series) >= 1:
+                            last_price = float(series.iloc[-1])
+                            prev_close = float(series.iloc[-2]) if len(series) >= 2 else last_price
+                            pct_change = ((last_price - prev_close) / prev_close * 100.0) if prev_close else 0.0
+                            is_up = pct_change >= 0.0
+                            sign = "+" if is_up else ""
+                            price_str = f"{prefix}{last_price:,.2f}" if last_price >= 1000 else f"{prefix}{last_price:.2f}"
+                            updated.append({
+                                "sym": display,
+                                "display": display,
+                                "ticker": sym_ticker,
+                                "price": price_str,
+                                "change": f"{sign}{pct_change:.2f}%",
+                                "is_up": is_up,
+                                "is_index": is_index,
+                            })
+                            continue
+                except Exception:
+                    pass
+                updated.append(item)
+
+            if updated:
+                _ticker_cache["items"] = updated
+                _ticker_cache["last_updated"] = time.time()
+                _ticker_cache["source"] = "live"
+    except Exception:
+        pass
+    finally:
+        _ticker_cache["is_refreshing"] = False
+
+
+@app.get("/api/ticker-tape")
+@app.get("/ticker-prices")
+def get_live_ticker_tape():
+    """Retrieve live quotes for top Indian market indices and equities to power the scrolling ticker tape on page load."""
+    import time
+    import threading
+    now = time.time()
+
+    # If cache is older than 90 seconds and not already refreshing in background, trigger refresh
+    if (now - _ticker_cache["last_updated"] > 90.0) and not _ticker_cache["is_refreshing"]:
+        _ticker_cache["is_refreshing"] = True
+        threading.Thread(target=_refresh_ticker_cache_worker, daemon=True).start()
+
+    return {
+        "status": "success",
+        "source": _ticker_cache.get("source", "baseline"),
+        "items": _ticker_cache["items"],
+    }
+
+
 @app.post("/analyze")
 async def analyze_stock(payload: AnalysisRequestPayload):
     """Execute end-to-end multi-agent stock analysis and risk intelligence pipeline."""
@@ -217,6 +312,15 @@ async def analyze_stock(payload: AnalysisRequestPayload):
                 "recommendation": worst_case.simulated.scenario_recommendation,
             }
 
+        best_case = blackboard_state.scenario_simulation.best_case_scenario
+        best_case_dict = None
+        if best_case and best_case.simulated:
+            best_case_dict = {
+                "name": best_case.scenario_name,
+                "risk_score": best_case.simulated.scenario_risk_score,
+                "recommendation": best_case.simulated.scenario_recommendation,
+            }
+
         response_payload = {
             "run_id": blackboard_state.run_id,
             "trace_id": blackboard_state.trace_id,
@@ -231,6 +335,17 @@ async def analyze_stock(payload: AnalysisRequestPayload):
                 "data_quality": blackboard_state.market_data.data_quality_status,
                 "is_stale": blackboard_state.market_data.is_stale,
                 "freshness_age_days": blackboard_state.market_data.freshness_age_days,
+                "bars": [
+                    {
+                        "timestamp": b.timestamp,
+                        "close": b.close,
+                        "open": b.open,
+                        "high": b.high,
+                        "low": b.low,
+                        "volume": b.volume,
+                    }
+                    for b in blackboard_state.market_data.bars
+                ],
             },
             "technical_findings": {
                 "status": blackboard_state.technical_findings.status.value,
@@ -246,6 +361,15 @@ async def analyze_stock(payload: AnalysisRequestPayload):
                 "recommendation": blackboard_state.risk_findings.recommendation,
                 "warnings": blackboard_state.risk_findings.warnings,
                 "reasons": blackboard_state.risk_findings.reasons,
+                "checks": [
+                    {
+                        "name": c.name,
+                        "passed": c.passed,
+                        "score": c.score,
+                        "message": c.message,
+                    }
+                    for c in blackboard_state.risk_findings.checks
+                ],
             },
             "news_and_sentiment": {
                 "status": blackboard_state.news_sentiment.status.value,
@@ -296,21 +420,39 @@ async def analyze_stock(payload: AnalysisRequestPayload):
             "scenario_simulation": {
                 "status": blackboard_state.scenario_simulation.status.value,
                 "total_scenarios": blackboard_state.scenario_simulation.total_scenarios_evaluated,
+                "baseline_metrics": {
+                    "stock_price": blackboard_state.scenario_simulation.baseline_price,
+                    "volatility_pct": blackboard_state.scenario_simulation.baseline_volatility_pct,
+                    "sentiment_score": blackboard_state.scenario_simulation.baseline_sentiment_score,
+                    "risk_score": blackboard_state.scenario_simulation.baseline_risk_score,
+                    "risk_level": blackboard_state.scenario_simulation.baseline_risk_level,
+                    "recommendation": blackboard_state.scenario_simulation.baseline_recommendation,
+                },
                 "worst_case_scenario": worst_case_dict,
+                "best_case_scenario": best_case_dict,
                 "scenarios_flipping_recommendation": blackboard_state.scenario_simulation.scenarios_changing_recommendation,
                 "scenarios_material_risk_increase": blackboard_state.scenario_simulation.scenarios_material_risk_increase,
-                "scenarios_sample": [
+                "scenarios": [
                     {
                         "name": s.scenario_name,
-                        "category": s.category.value,
-                        "hypothetical_price": s.simulated.hypothetical_price,
-                        "percentage_price_change": s.simulated.percentage_price_change,
-                        "scenario_risk_score": s.simulated.scenario_risk_score,
-                        "scenario_recommendation": s.simulated.scenario_recommendation,
-                        "risk_score_delta": s.comparison.risk_score_delta,
+                        "category": s.category.value if hasattr(s.category, "value") else str(s.category),
+                        "description": s.description,
+                        "percentage_price_change": s.simulated.percentage_price_change if s.simulated else None,
+                        "hypothetical_price": s.simulated.hypothetical_price if s.simulated else None,
+                        "absolute_price_change": s.simulated.absolute_price_change if s.simulated else None,
+                        "portfolio_value_impact": s.simulated.portfolio_value_impact if s.simulated else None,
+                        "adjusted_volatility_pct": s.simulated.hypothetical_volatility_pct if s.simulated else None,
+                        "scenario_risk_score": s.simulated.scenario_risk_score if s.simulated else None,
+                        "scenario_risk_level": s.simulated.scenario_risk_level if s.simulated else None,
+                        "scenario_recommendation": s.simulated.scenario_recommendation if s.simulated else None,
+                        "risk_score_delta": s.comparison.risk_score_delta if s.comparison else None,
+                        "recommendation_changed": s.comparison.recommendation_changed if s.comparison else False,
+                        "assumptions": s.assumptions,
                     }
-                    for s in blackboard_state.scenario_simulation.scenarios[:6]
+                    for s in blackboard_state.scenario_simulation.scenarios
                 ],
+                "monte_carlo": blackboard_state.scenario_simulation.monte_carlo_result.model_dump() if blackboard_state.scenario_simulation.monte_carlo_result else None,
+                "warnings": blackboard_state.scenario_simulation.warnings,
             },
             "final_report": {
                 "executive_summary": blackboard_state.final_report.executive_summary,

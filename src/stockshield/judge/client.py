@@ -16,8 +16,8 @@ from stockshield.judge.models import JudgeEvaluationOutput
 from stockshield.judge.prompt import SYSTEM_INSTRUCTION
 from stockshield.llm.cost_estimator import compute_cost
 
-DEFAULT_JUDGE_MODEL = "gemini-3.8-flash"
-FALLBACK_CANDIDATES = ["gemini-3.5-flash", "gemini-3-flash-preview"]
+DEFAULT_JUDGE_MODEL = "gemini-3.5-flash"
+FALLBACK_CANDIDATES = ["gemini-3.8-flash", "gemini-3-flash-preview"]
 
 
 class GeminiJudgeClient:
