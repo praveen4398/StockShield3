@@ -504,7 +504,7 @@ function renderResults(data) {
   if (sbTicker) sbTicker.textContent = data.ticker || '-';
   const rec = data.risk_findings?.recommendation || 'HOLD';
   const recColor = rec.includes('BUY') || rec === 'APPROVED' ? 'var(--neon-green)' :
-                   rec.includes('SELL') || rec === 'REJECTED' ? 'var(--accent-red)' : 'var(--accent-orange)';
+    rec.includes('SELL') || rec === 'REJECTED' ? 'var(--accent-red)' : 'var(--accent-orange)';
   const sbRec = document.getElementById('sidebar-rec');
   if (sbRec) sbRec.innerHTML = `<span style="color:${recColor};font-weight:700;">${rec}</span>`;
 
@@ -530,7 +530,7 @@ function renderOverview(data) {
 
   const rec = risk.recommendation || 'HOLD';
   const recClass = rec.toUpperCase().includes('BUY') || rec.toUpperCase() === 'APPROVED' ? 'BUY' :
-                   rec.toUpperCase().includes('SELL') || rec.toUpperCase() === 'REJECTED' ? 'SELL' : 'HOLD';
+    rec.toUpperCase().includes('SELL') || rec.toUpperCase() === 'REJECTED' ? 'SELL' : 'HOLD';
 
   const sentiment = news.overall_sentiment || 'neutral';
   const sentimentClass = sentiment === 'positive' ? 'bullish' : sentiment === 'negative' ? 'bearish' : 'neutral';
@@ -948,7 +948,7 @@ function renderIndicatorRows(ind) {
     .map(([name, val, sig, config]) => {
       const formatted = typeof val === 'number' ? val.toFixed(3) : val || '-';
       const sigClass = sig?.toLowerCase().includes('bullish') || sig?.toLowerCase().includes('golden') ? 'value-up' :
-                      sig?.toLowerCase().includes('bearish') || sig?.toLowerCase().includes('overbought') ? 'value-down' : 'value-neutral';
+        sig?.toLowerCase().includes('bearish') || sig?.toLowerCase().includes('overbought') ? 'value-down' : 'value-neutral';
       return `
         <tr>
           <td style="font-weight:600;">${name}</td>
@@ -1568,9 +1568,9 @@ function renderJudgeDetail(judge) {
       <div class="section-header"><div class="section-title"><span class="dot"></span>Institutional Evaluation Dimensions</div></div>
       <div style="display:flex;flex-direction:column;gap:1.25rem;">
         ${Object.entries(dims).map(([key, dim]) => {
-          const dScore = dim.score !== null && dim.score !== undefined ? dim.score : 0.85;
-          const dScorePct = (dScore <= 1.0 ? dScore * 100 : dScore).toFixed(0);
-          return `
+    const dScore = dim.score !== null && dim.score !== undefined ? dim.score : 0.85;
+    const dScorePct = (dScore <= 1.0 ? dScore * 100 : dScore).toFixed(0);
+    return `
             <div style="padding-bottom:1rem;border-bottom:1px solid var(--border-color);">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
                 <div style="font-size:0.88rem;font-weight:700;">${dim.dimension || key.replace(/_/g, ' ').toUpperCase()}</div>
@@ -1586,7 +1586,7 @@ function renderJudgeDetail(judge) {
                 </div>` : ''}
             </div>
           `;
-        }).join('')}
+  }).join('')}
       </div>
     </div>` : ''}
 
@@ -1709,6 +1709,39 @@ function useQuickPrompt(prompt) {
   sendChatMessage();
 }
 
+// ===== Mobile GENI Floating Drawer Controller =====
+function toggleMobileGeni(forceState) {
+  const panel = document.getElementById('chatbot-panel');
+  const backdrop = document.getElementById('chatbot-backdrop');
+  if (!panel) return;
+
+  const isOpen = panel.classList.contains('mobile-open');
+  const shouldOpen = forceState !== undefined ? forceState : !isOpen;
+
+  if (shouldOpen) {
+    panel.classList.add('mobile-open');
+    if (backdrop) backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      const input = document.getElementById('geni-input');
+      if (input && !input.disabled) input.focus();
+      const msgs = document.getElementById('chat-messages');
+      if (msgs) msgs.scrollTop = msgs.scrollHeight;
+    }, 180);
+  } else {
+    panel.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close drawer on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    toggleMobileGeni(false);
+  }
+});
+
 // ===== Saved Results Page =====
 function renderSavedResults() {
   const saved = JSON.parse(localStorage.getItem('ss_saved_results') || '[]');
@@ -1725,11 +1758,10 @@ function renderSavedResults() {
       <div>
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.4rem;">
           <span style="font-size:1.1rem;font-weight:800;color:var(--neon-green);">${item.ticker}</span>
-          <span class="badge badge-info" style="font-size:0.68rem;">${(item.data?.time_horizon || '').replace('_',' ')}</span>
-          <span class="badge badge-${
-            (item.data?.risk_findings?.recommendation || '').includes('BUY') || (item.data?.risk_findings?.recommendation || '') === 'APPROVED' ? 'bullish' :
-            (item.data?.risk_findings?.recommendation || '').includes('SELL') ? 'bearish' : 'neutral'
-          }" style="font-size:0.68rem;">${item.data?.risk_findings?.recommendation || 'HOLD'}</span>
+          <span class="badge badge-info" style="font-size:0.68rem;">${(item.data?.time_horizon || '').replace('_', ' ')}</span>
+          <span class="badge badge-${(item.data?.risk_findings?.recommendation || '').includes('BUY') || (item.data?.risk_findings?.recommendation || '') === 'APPROVED' ? 'bullish' :
+      (item.data?.risk_findings?.recommendation || '').includes('SELL') ? 'bearish' : 'neutral'
+    }" style="font-size:0.68rem;">${item.data?.risk_findings?.recommendation || 'HOLD'}</span>
         </div>
         <div style="font-size:0.78rem;color:var(--text-muted);">${new Date(item.timestamp).toLocaleString()}</div>
         <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem;">Run ID: <code>${item.run_id}</code></div>
@@ -1817,7 +1849,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') runAnalysis();
   });
 
-  document.getElementById('geni-input')?.addEventListener('input', function() {
+  document.getElementById('geni-input')?.addEventListener('input', function () {
     this.style.height = '36px';
     this.style.height = Math.min(this.scrollHeight, 100) + 'px';
   });

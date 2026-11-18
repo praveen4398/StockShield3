@@ -1062,7 +1062,7 @@
       </main>
 
       <!-- ===== Chatbot Panel ===== -->
-      <aside class="chatbot-panel">
+      <aside class="chatbot-panel" id="chatbot-panel">
         <div class="chatbot-header">
           <div class="chatbot-title">
             <div class="geni-avatar" aria-label="GENI"></div>
@@ -1071,7 +1071,10 @@
               <div id="chatbot-status" style="font-size:0.72rem;color:var(--text-muted);">Run analysis to enable</div>
             </div>
           </div>
-          <button class="btn-icon btn-ghost" onclick="clearChat()" title="Clear chat" style="font-size:0.85rem;">🗑️</button>
+          <div style="display:flex;align-items:center;gap:0.35rem;">
+            <button class="btn-icon btn-ghost" onclick="clearChat()" title="Clear chat" style="font-size:0.85rem;">🗑️</button>
+            <button class="btn-icon btn-ghost mobile-close-btn" onclick="toggleMobileGeni(false)" title="Close GENI" aria-label="Close GENI">✕</button>
+          </div>
         </div>
 
         <div class="chatbot-quick-prompts">
@@ -1951,18 +1954,36 @@
     // Check backend health on load
     setTimeout(async () => {
       try {
-        const r = await fetch('http://localhost:8000/health', { signal: AbortSignal.timeout(3000) });
+        const healthUrl = (typeof API_BASE !== 'undefined' && API_BASE) ? `${API_BASE}/health` : '/health';
+        const r = await fetch(healthUrl, { signal: AbortSignal.timeout(3000) });
         if (r.ok) {
           document.getElementById('backend-status').style.color = 'var(--neon-green)';
+          document.getElementById('backend-status').textContent = '●';
+          const hostLabel = window.location.hostname === 'localhost' ? 'localhost:8000 (connected)' : 'Render Cloud (live)';
+          const urlEl = document.getElementById('backend-url');
+          if (urlEl) urlEl.textContent = hostLabel;
         } else {
           throw new Error();
         }
       } catch {
         document.getElementById('backend-status').style.color = 'var(--accent-red)';
         document.getElementById('backend-status').textContent = '●';
-        document.getElementById('backend-url').textContent = 'localhost:8000 (offline)';
+        document.getElementById('backend-url').textContent = 'backend offline';
       }
     }, 1000);
   </script>
+
+  <!-- Mobile Backdrop for Chatbot Drawer -->
+  <div id="chatbot-backdrop" class="chatbot-backdrop" onclick="toggleMobileGeni(false)"></div>
+
+  <!-- Floating Mobile "Ask GENI" Button -->
+  <button id="geni-fab-btn" class="geni-fab-btn" onclick="toggleMobileGeni()" aria-label="Ask GENI" title="Ask GENI">
+    <div class="geni-fab-circle">
+      <img src="assets/geni-logo.jpg" alt="GENI" class="geni-fab-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <span class="geni-fab-fallback" style="display:none;">G</span>
+    </div>
+    <span class="geni-fab-label">Ask GENI</span>
+    <span class="geni-fab-dot"></span>
+  </button>
 </body>
 </html>

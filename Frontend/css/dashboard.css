@@ -795,6 +795,102 @@ canvas { width: 100% !important; }
 .agent-detail-meta h1 { font-size: 1.5rem; }
 .agent-detail-meta p { color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.3rem; }
 
+/* ===== Mobile "Ask GENI" Floating Button & Drawer ===== */
+.geni-fab-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 9998;
+  display: none; /* Hidden on desktop, shown on mobile */
+  align-items: center;
+  gap: 0.65rem;
+  padding: 6px 16px 6px 6px;
+  background: var(--bg-card, #111827);
+  border: 1.5px solid var(--accent-green, #00ff41);
+  border-radius: 9999px;
+  box-shadow: 0 8px 26px rgba(0, 255, 65, 0.35), 0 4px 12px rgba(0, 0, 0, 0.6);
+  color: var(--text-primary, #ffffff);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.geni-fab-btn:hover, .geni-fab-btn:active {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 34px rgba(0, 255, 65, 0.5), 0 6px 18px rgba(0, 0, 0, 0.7);
+  border-color: #39ff14;
+}
+
+.geni-fab-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000;
+  border: 1.5px solid rgba(0, 255, 65, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.geni-fab-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.geni-fab-fallback {
+  color: var(--neon-green, #00ff41);
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.geni-fab-label {
+  white-space: nowrap;
+}
+
+.geni-fab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-green, #00ff41);
+  box-shadow: 0 0 8px var(--neon-green, #00ff41);
+  animation: pulseFabDot 2s infinite;
+}
+
+@keyframes pulseFabDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.chatbot-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.chatbot-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+.mobile-close-btn {
+  display: none;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 1200px) {
   .dashboard-layout { grid-template-columns: 220px 1fr 300px; }
@@ -803,5 +899,55 @@ canvas { width: 100% !important; }
 @media (max-width: 1024px) {
   .dashboard-layout { grid-template-columns: 1fr; grid-template-rows: auto; }
   .sidebar { display: none; }
-  .chatbot-panel { display: none; }
+
+  /* Show Ask GENI floating button on mobile & tablet */
+  .geni-fab-btn {
+    display: flex;
+  }
+
+  .mobile-close-btn {
+    display: flex !important;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+  }
+
+  /* Chatbot panel as a slide-out drawer on mobile */
+  .chatbot-panel {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    max-height: 100vh;
+    z-index: 10001;
+    background: var(--bg-sidebar, #0d1117);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
+    border-left: 1px solid var(--border-color);
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  .chatbot-panel.mobile-open {
+    display: flex !important;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .geni-fab-btn {
+    bottom: 18px;
+    right: 16px;
+    padding: 5px 14px 5px 5px;
+    font-size: 0.82rem;
+  }
+  .geni-fab-circle {
+    width: 34px;
+    height: 34px;
+  }
+  .chatbot-panel {
+    max-width: 100%;
+  }
 }
