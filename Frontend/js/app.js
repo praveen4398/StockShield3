@@ -84,10 +84,10 @@ const COMPANY_TICKER_MAP = {
   "TATA SILVER": "TATASILV",
   "TATA SILVER ETF": "TATASILV",
   "TATASILV": "TATASILV",
-  "SILVER": "SILVERBEES",
   "SILVERBEES": "SILVERBEES",
-  "GOLD": "GOLDBEES",
+  "SILVER BEES": "SILVERBEES",
   "GOLDBEES": "GOLDBEES",
+  "GOLD BEES": "GOLDBEES",
   "TRENT": "TRENT",
   "TITAN": "TITAN",
   "TITAN COMPANY": "TITAN",
@@ -194,6 +194,22 @@ const COMPANY_TICKER_MAP = {
   "SIEMENS": "SIEMENS",
   "ABB": "ABB"
 };
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function findStockInText(text) {
+  if (!text || typeof text !== 'string') return null;
+  const sortedNames = Object.keys(COMPANY_TICKER_MAP).sort((a, b) => b.length - a.length);
+  for (const name of sortedNames) {
+    const regex = new RegExp(`(^|[^a-zA-Z0-9])${escapeRegex(name)}([^a-zA-Z0-9]|$)`, 'i');
+    if (regex.test(text)) {
+      return COMPANY_TICKER_MAP[name];
+    }
+  }
+  return null;
+}
 
 function resolveCompanyOrTicker(input) {
   if (!input) return '';
@@ -315,7 +331,7 @@ async function runAnalysis() {
       setTimeout(() => {
         const inp = document.getElementById('geni-input');
         if (inp) inp.value = pendingPrompt;
-        sendChatMessage();
+        sendChatMessage(true);
       }, 700);
     }
 
@@ -1666,83 +1682,77 @@ function formatChatText(text) {
     .replace(/\n/g, '<br>');
 }
 
-async function sendChatMessage() {
+async function sendChatMessage(isFollowup = false) {
   const input = document.getElementById('geni-input');
-  const text = input.value.trim();
+  const text = (input ? input.value : '').trim();
   if (!text) return;
 
-  input.value = '';
-  input.style.height = '36px';
-  addChatMessage('user', text);
-
-  // If no stock analysis has completed yet, automatically run analysis on the stock!
-  if (!currentRunId) {
-    const rawSearch = document.getElementById('stockSearch')?.value?.trim() || 'HDFCBANK.NS';
-    const upper = text.toUpperCase();
-    let targetTicker = rawSearch;
-    for (const sample of ['TCS', 'INFY', 'RELIANCE', 'HDFCBANK', 'WIPRO', 'SBIN', 'ICICIBANK', 'ITC']) {
-      if (upper.includes(sample)) {
-        targetTicker = sample + '.NS';
-        break;
-      }
-    }
-    if (!targetTicker.endsWith('.NS')) targetTicker += '.NS';
-
-    const infoDiv = document.createElement('div');
-    infoDiv.className = 'chat-message assistant';
-    infoDiv.innerHTML = `<div class="chat-avatar-mini" aria-label="GENI"></div><div class="chat-bubble" style="border: 1px solid rgba(0,255,65,0.4);"><span style="color:var(--neon-green);font-weight:700;">⚡ Calculating live signals:</span> Running multi-agent pipeline for <strong>${targetTicker}</strong> first to compute mathematical momentum and risk gates... (~10-15s)</div>`;
-    document.getElementById('chat-messages').appendChild(infoDiv);
-    document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
-
-    const searchInput = document.getElementById('stockSearch');
-    if (searchInput) searchInput.value = targetTicker;
-
-    window._pendingGeniPrompt = text;
-    try {
-      await runAnalysis();
-    } catch (e) {
-      addChatMessage('assistant', `⚠️ Could not complete analysis for ${targetTicker}: ${e.message}`);
-    }
-    return;
+  if (input) {
+    input.value = '';
+    input.style.height = '36px';
   }
 
-  // If already analyzing a stock, check if the user is asking about a DIFFERENT stock
-  if (currentResults && currentResults.ticker) {
-    const currentBase = currentResults.ticker.replace('.NS', '').toUpperCase();
-    const upperText = text.toUpperCase();
-    let newTicker = null;
+  // Only render user message bubble if this is a new prompt (not an auto-executed followup)
+  if (!isFollowup) {
+    addChatMessage('user', text);
+  }
 
-    // Match longest matching company name first
-    const sortedKeys = Object.keys(COMPANY_TICKER_MAP).sort((a, b) => b.length - a.length);
-    for (const name of sortedKeys) {
-      if (upperText.includes(name)) {
-        const sym = COMPANY_TICKER_MAP[name];
-        if (sym !== currentBase) {
-          newTicker = sym;
-          break;
-        }
-      }
-    }
+  // If this is a followup execution (analysis just finished for this prompt),
+  // SKIP stock-switching detection completely and proceed directly to /geni/chat!
+  if (!isFollowup) {
+    // 1. If NO stock analysis has completed yet, automatically run analysis on the stock!
+    if (!currentRunId) {
+      const detected = findStockInText(text);
+      const rawSearch = document.getElementById('stockSearch')?.value?.trim() || 'HDFCBANK.NS';
+      let targetTicker = detected ? detected : rawSearch;
+      if (!targetTicker.endsWith('.NS')) targetTicker += '.NS';
 
-    if (newTicker) {
-      const fullNewTicker = newTicker.endsWith('.NS') ? newTicker : `${newTicker}.NS`;
-      const switchDiv = document.createElement('div');
-      switchDiv.className = 'chat-message assistant';
-      switchDiv.innerHTML = `<div class="chat-avatar-mini" aria-label="GENI"></div><div class="chat-bubble" style="border: 1px solid rgba(0,255,65,0.4);"><span style="color:var(--neon-green);font-weight:700;">🔄 Switching to ${fullNewTicker}:</span> Running institutional analysis for <strong>${fullNewTicker}</strong> so I can answer with verified signals and news... (~10-15s)</div>`;
-      document.getElementById('chat-messages').appendChild(switchDiv);
-      document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'chat-message assistant';
+      infoDiv.innerHTML = `<div class="chat-avatar-mini" aria-label="GENI"></div><div class="chat-bubble" style="border: 1px solid rgba(0,255,65,0.4);"><span style="color:var(--neon-green);font-weight:700;">⚡ Calculating live signals:</span> Running multi-agent pipeline for <strong>${targetTicker}</strong> first to compute mathematical momentum and risk gates... (~10-15s)</div>`;
+      document.getElementById('chat-messages')?.appendChild(infoDiv);
+      const msgs = document.getElementById('chat-messages');
+      if (msgs) msgs.scrollTop = msgs.scrollHeight;
 
       const searchInput = document.getElementById('stockSearch');
-      if (searchInput) searchInput.value = fullNewTicker;
+      if (searchInput) searchInput.value = targetTicker;
 
-      currentConversationId = null;
       window._pendingGeniPrompt = text;
       try {
         await runAnalysis();
       } catch (e) {
-        addChatMessage('assistant', `⚠️ Could not complete analysis for ${fullNewTicker}: ${e.message}`);
+        addChatMessage('assistant', `⚠️ Could not complete analysis for ${targetTicker}: ${e.message}`);
       }
       return;
+    }
+
+    // 2. If already analyzing a stock, check if the user is asking about a DIFFERENT stock
+    if (currentResults && currentResults.ticker) {
+      const currentBase = currentResults.ticker.replace('.NS', '').toUpperCase();
+      const detected = findStockInText(text);
+
+      // Only switch if user explicitly mentioned a stock AND that stock is DIFFERENT from current stock!
+      if (detected && detected.toUpperCase() !== currentBase) {
+        const fullNewTicker = detected.endsWith('.NS') ? detected : `${detected}.NS`;
+        const switchDiv = document.createElement('div');
+        switchDiv.className = 'chat-message assistant';
+        switchDiv.innerHTML = `<div class="chat-avatar-mini" aria-label="GENI"></div><div class="chat-bubble" style="border: 1px solid rgba(0,255,65,0.4);"><span style="color:var(--neon-green);font-weight:700;">🔄 Switching to ${fullNewTicker}:</span> Running institutional analysis for <strong>${fullNewTicker}</strong> so I can answer with verified signals and news... (~10-15s)</div>`;
+        document.getElementById('chat-messages')?.appendChild(switchDiv);
+        const msgs = document.getElementById('chat-messages');
+        if (msgs) msgs.scrollTop = msgs.scrollHeight;
+
+        const searchInput = document.getElementById('stockSearch');
+        if (searchInput) searchInput.value = fullNewTicker;
+
+        currentConversationId = null;
+        window._pendingGeniPrompt = text;
+        try {
+          await runAnalysis();
+        } catch (e) {
+          addChatMessage('assistant', `⚠️ Could not complete analysis for ${fullNewTicker}: ${e.message}`);
+        }
+        return;
+      }
     }
   }
 
@@ -1941,6 +1951,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('geni-input')?.addEventListener('input', function () {
     this.style.height = '36px';
     this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
+
+  document.getElementById('geni-input')?.addEventListener('focus', function () {
+    setTimeout(() => {
+      const msgs = document.getElementById('chat-messages');
+      if (msgs) msgs.scrollTop = msgs.scrollHeight;
+    }, 280);
   });
 
   document.getElementById('geni-input')?.addEventListener('keydown', e => {

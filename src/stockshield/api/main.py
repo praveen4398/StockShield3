@@ -56,10 +56,21 @@ if _FRONTEND_DIR.exists():
 @app.get("/dashboard", response_class=HTMLResponse)
 async def serve_dashboard():
     """Serve the modern StockShield frontend dashboard."""
+    no_cache_headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+    }
     if _FRONTEND_INDEX_PATH.exists():
-        return HTMLResponse(content=_FRONTEND_INDEX_PATH.read_text(encoding="utf-8"))
+        return HTMLResponse(
+            content=_FRONTEND_INDEX_PATH.read_text(encoding="utf-8"),
+            headers=no_cache_headers,
+        )
     if _INDEX_HTML_PATH.exists():
-        return HTMLResponse(content=_INDEX_HTML_PATH.read_text(encoding="utf-8"))
+        return HTMLResponse(
+            content=_INDEX_HTML_PATH.read_text(encoding="utf-8"),
+            headers=no_cache_headers,
+        )
     return HTMLResponse("<h2>StockShield Dashboard not found.</h2>", status_code=404)
 
 

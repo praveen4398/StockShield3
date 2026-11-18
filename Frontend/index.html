@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
   <title>StockShield — Agentic AI Stock Analysis</title>
   <meta name="description" content="StockShield — Agentic AI-based stock analysis and risk assessment system for the Indian stock market." />
 
@@ -14,8 +14,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/theme.css" />
-  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/theme.css?v=2.1.0" />
+  <link rel="stylesheet" href="css/dashboard.css?v=2.1.0" />
 
   <style>
     /* Extra page-specific tweaks */
@@ -1090,7 +1090,7 @@
         <div class="chatbot-messages" id="chat-messages">
           <div class="chat-message assistant">
             <div class="chat-avatar-mini" aria-label="GENI"></div>
-            <div class="chat-bubble">👋 Hi! I'm <strong>GENI</strong>, your AI stock analyst. Run an analysis first, then ask me anything about the results!</div>
+            <div class="chat-bubble">👋 Hi! I'm <strong>GENI</strong>, your AI stock analyst. Ask me about any stock (e.g. <em>"Analyze TCS"</em> or <em>"How is HDFC Bank?"</em>), or tap a quick question below!</div>
           </div>
         </div>
 
@@ -1492,7 +1492,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=2.1.0"></script>
   <script>
     // Additional helper functions
     function quickSearch(ticker) {

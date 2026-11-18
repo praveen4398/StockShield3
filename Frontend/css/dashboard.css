@@ -903,6 +903,8 @@ canvas { width: 100% !important; }
   /* Show Ask GENI floating button on mobile & tablet */
   .geni-fab-btn {
     display: flex;
+    bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px)));
+    right: max(16px, calc(16px + env(safe-area-inset-right, 0px)));
   }
 
   .mobile-close-btn {
@@ -920,10 +922,10 @@ canvas { width: 100% !important; }
     bottom: 0;
     left: auto;
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     height: 100%;
+    height: -webkit-fill-available;
     height: 100dvh;
-    max-height: 100dvh;
     z-index: 10001;
     background: var(--bg-sidebar, #0d1117);
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
@@ -939,25 +941,39 @@ canvas { width: 100% !important; }
     transform: translateX(0);
   }
 
+  .chatbot-header {
+    flex-shrink: 0;
+    padding-top: max(0.85rem, env(safe-area-inset-top, 0.85rem));
+  }
+
+  .chatbot-quick-prompts {
+    flex-shrink: 0;
+  }
+
   .chatbot-messages {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 0.9rem 0.75rem;
   }
 
   .chatbot-input-area {
     flex-shrink: 0;
-    padding: 0.65rem 0.75rem calc(0.65rem + env(safe-area-inset-bottom, 14px));
+    padding: 0.75rem 0.85rem;
+    padding-bottom: max(0.85rem, calc(0.65rem + env(safe-area-inset-bottom, 16px)));
     background: var(--bg-secondary, #161b22);
     border-top: 1px solid var(--border-color);
     position: relative;
-    z-index: 10;
+    z-index: 20;
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.45);
   }
 
   .chatbot-input-area textarea {
-    font-size: 0.95rem; /* Prevents auto-zoom on mobile Chrome */
-    min-height: 40px;
+    font-size: 16px !important; /* Prevents auto-zoom on mobile Chrome / iOS */
+    min-height: 44px;
+    line-height: 1.4;
+    border-radius: var(--radius-md);
   }
 
   .chatbot-info {
@@ -965,18 +981,21 @@ canvas { width: 100% !important; }
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+  .chatbot-panel {
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    border-left: none;
+  }
   .geni-fab-btn {
-    bottom: 18px;
-    right: 16px;
+    bottom: max(16px, calc(12px + env(safe-area-inset-bottom, 0px)));
+    right: max(14px, calc(12px + env(safe-area-inset-right, 0px)));
     padding: 5px 14px 5px 5px;
     font-size: 0.82rem;
   }
   .geni-fab-circle {
     width: 34px;
     height: 34px;
-  }
-  .chatbot-panel {
-    max-width: 100%;
   }
 }
