@@ -81,6 +81,13 @@ const COMPANY_TICKER_MAP = {
   "TATA CONSUMER": "TATACONSUM",
   "TATA CONSUMER PRODUCTS": "TATACONSUM",
   "TATA TECHNOLOGIES": "TATATECH",
+  "TATA SILVER": "TATASILV",
+  "TATA SILVER ETF": "TATASILV",
+  "TATASILV": "TATASILV",
+  "SILVER": "SILVERBEES",
+  "SILVERBEES": "SILVERBEES",
+  "GOLD": "GOLDBEES",
+  "GOLDBEES": "GOLDBEES",
   "TRENT": "TRENT",
   "TITAN": "TITAN",
   "TITAN COMPANY": "TITAN",
@@ -1697,6 +1704,46 @@ async function sendChatMessage() {
       addChatMessage('assistant', `⚠️ Could not complete analysis for ${targetTicker}: ${e.message}`);
     }
     return;
+  }
+
+  // If already analyzing a stock, check if the user is asking about a DIFFERENT stock
+  if (currentResults && currentResults.ticker) {
+    const currentBase = currentResults.ticker.replace('.NS', '').toUpperCase();
+    const upperText = text.toUpperCase();
+    let newTicker = null;
+
+    // Match longest matching company name first
+    const sortedKeys = Object.keys(COMPANY_TICKER_MAP).sort((a, b) => b.length - a.length);
+    for (const name of sortedKeys) {
+      if (upperText.includes(name)) {
+        const sym = COMPANY_TICKER_MAP[name];
+        if (sym !== currentBase) {
+          newTicker = sym;
+          break;
+        }
+      }
+    }
+
+    if (newTicker) {
+      const fullNewTicker = newTicker.endsWith('.NS') ? newTicker : `${newTicker}.NS`;
+      const switchDiv = document.createElement('div');
+      switchDiv.className = 'chat-message assistant';
+      switchDiv.innerHTML = `<div class="chat-avatar-mini" aria-label="GENI"></div><div class="chat-bubble" style="border: 1px solid rgba(0,255,65,0.4);"><span style="color:var(--neon-green);font-weight:700;">🔄 Switching to ${fullNewTicker}:</span> Running institutional analysis for <strong>${fullNewTicker}</strong> so I can answer with verified signals and news... (~10-15s)</div>`;
+      document.getElementById('chat-messages').appendChild(switchDiv);
+      document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+
+      const searchInput = document.getElementById('stockSearch');
+      if (searchInput) searchInput.value = fullNewTicker;
+
+      currentConversationId = null;
+      window._pendingGeniPrompt = text;
+      try {
+        await runAnalysis();
+      } catch (e) {
+        addChatMessage('assistant', `⚠️ Could not complete analysis for ${fullNewTicker}: ${e.message}`);
+      }
+      return;
+    }
   }
 
   const typingDiv = document.createElement('div');
