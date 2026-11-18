@@ -1068,7 +1068,7 @@
             <div class="geni-avatar" aria-label="GENI"></div>
             <div>
               <div style="font-weight:700;font-size:0.85rem;">GENI Assistant</div>
-              <div id="chatbot-status" style="font-size:0.72rem;color:var(--text-muted);">Run analysis to enable</div>
+              <div id="chatbot-status" style="font-size:0.72rem;color:var(--neon-green);">● Online & Ready</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:0.35rem;">
@@ -1098,11 +1098,10 @@
           <textarea
             id="geni-input"
             class="form-control"
-            placeholder="Ask about signals, risk, forecast..."
-            disabled
+            placeholder="Ask GENI about signals, risk, forecast..."
             rows="1"
           ></textarea>
-          <button id="geni-send-btn" class="btn btn-primary btn-sm" onclick="sendChatMessage()" disabled style="flex-shrink:0;padding:0.5rem 0.75rem;">
+          <button id="geni-send-btn" class="btn btn-primary btn-sm" onclick="sendChatMessage()" style="flex-shrink:0;padding:0.5rem 0.75rem;">
             ➤
           </button>
         </div>

@@ -301,6 +301,17 @@ async function runAnalysis() {
     renderResults(data);
     showPage('dashboard');
 
+    // If user asked a question before analysis was ready, send it to GENI now!
+    if (window._pendingGeniPrompt) {
+      const pendingPrompt = window._pendingGeniPrompt;
+      window._pendingGeniPrompt = null;
+      setTimeout(() => {
+        const inp = document.getElementById('geni-input');
+        if (inp) inp.value = pendingPrompt;
+        sendChatMessage();
+      }, 700);
+    }
+
   } catch (err) {
     clearInterval(stageInterval);
     hideLoader();
@@ -1651,11 +1662,42 @@ function formatChatText(text) {
 async function sendChatMessage() {
   const input = document.getElementById('geni-input');
   const text = input.value.trim();
-  if (!text || !currentRunId) return;
+  if (!text) return;
 
   input.value = '';
   input.style.height = '36px';
   addChatMessage('user', text);
+
+  // If no stock analysis has completed yet, automatically run analysis on the stock!
+  if (!currentRunId) {
+    const rawSearch = document.getElementById('stockSearch')?.value?.trim() || 'HDFCBANK.NS';
+    const upper = text.toUpperCase();
+    let targetTicker = rawSearch;
+    for (const sample of ['TCS', 'INFY', 'RELIANCE', 'HDFCBANK', 'WIPRO', 'SBIN', 'ICICIBANK', 'ITC']) {
+      if (upper.includes(sample)) {
+        targetTicker = sample + '.NS';
+        break;
+      }
+    }
+    if (!targetTicker.endsWith('.NS')) targetTicker += '.NS';
+
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'chat-message assistant';
+    infoDiv.innerHTML = `<div class="chat-avatar-mini" aria-label="GENI"></div><div class="chat-bubble" style="border: 1px solid rgba(0,255,65,0.4);"><span style="color:var(--neon-green);font-weight:700;">⚡ Calculating live signals:</span> Running multi-agent pipeline for <strong>${targetTicker}</strong> first to compute mathematical momentum and risk gates... (~10-15s)</div>`;
+    document.getElementById('chat-messages').appendChild(infoDiv);
+    document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+
+    const searchInput = document.getElementById('stockSearch');
+    if (searchInput) searchInput.value = targetTicker;
+
+    window._pendingGeniPrompt = text;
+    try {
+      await runAnalysis();
+    } catch (e) {
+      addChatMessage('assistant', `⚠️ Could not complete analysis for ${targetTicker}: ${e.message}`);
+    }
+    return;
+  }
 
   const typingDiv = document.createElement('div');
   typingDiv.className = 'chat-message assistant';

@@ -918,21 +918,50 @@ canvas { width: 100% !important; }
     top: 0;
     right: 0;
     bottom: 0;
+    left: auto;
     width: 100%;
     max-width: 420px;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
     z-index: 10001;
     background: var(--bg-sidebar, #0d1117);
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
     border-left: 1px solid var(--border-color);
     transform: translateX(100%);
     transition: transform 0.28s cubic-bezier(0.33, 1, 0.68, 1);
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .chatbot-panel.mobile-open {
     display: flex !important;
     transform: translateX(0);
+  }
+
+  .chatbot-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chatbot-input-area {
+    flex-shrink: 0;
+    padding: 0.65rem 0.75rem calc(0.65rem + env(safe-area-inset-bottom, 14px));
+    background: var(--bg-secondary, #161b22);
+    border-top: 1px solid var(--border-color);
+    position: relative;
+    z-index: 10;
+  }
+
+  .chatbot-input-area textarea {
+    font-size: 0.95rem; /* Prevents auto-zoom on mobile Chrome */
+    min-height: 40px;
+  }
+
+  .chatbot-info {
+    display: none; /* Hide disclaimer on mobile to maximize chat space */
   }
 }
 
