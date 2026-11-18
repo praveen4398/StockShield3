@@ -640,6 +640,21 @@ function updateAgentCard(agentId, status, mainValue, subValue) {
   }
 }
 
+function formatChartDate(rawDate, isMobile = false) {
+  if (!rawDate) return '';
+  const clean = rawDate.slice(0, 10);
+  if (!isMobile) return clean;
+  const parts = clean.split('-');
+  if (parts.length === 3) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const mIdx = parseInt(parts[1], 10) - 1;
+    if (mIdx >= 0 && mIdx < 12) {
+      return `${parseInt(parts[2], 10)} ${months[mIdx]}`;
+    }
+  }
+  return clean;
+}
+
 // ===== 1. Observed Historical Price Chart (Present & Past Continuous Line) =====
 function renderHistoricalChart(data) {
   const canvas = document.getElementById('historicalChart');
@@ -648,6 +663,7 @@ function renderHistoricalChart(data) {
   const market = data.market_data || {};
   const bars = market.bars || [];
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const isMobile = window.innerWidth < 640;
 
   const solidLineColor = isDark ? '#00ff41' : '#00aa2a';
   const areaGradient = isDark ? 'rgba(0, 255, 65, 0.06)' : 'rgba(0, 170, 42, 0.06)';
@@ -660,10 +676,7 @@ function renderHistoricalChart(data) {
   // Use all observed bars (or up to 180 for optimal performance & clarity)
   const displayBars = bars.length > 180 ? bars.slice(-180) : bars;
 
-  const labels = displayBars.map(b => {
-    const raw = b.timestamp || '';
-    return raw.length >= 10 ? raw.slice(0, 10) : raw;
-  });
+  const labels = displayBars.map(b => formatChartDate(b.timestamp || '', isMobile));
   const closes = displayBars.map(b => b.close);
 
   if (closes.length > 0) {
@@ -689,10 +702,10 @@ function renderHistoricalChart(data) {
           data: closes,
           borderColor: solidLineColor,
           backgroundColor: areaGradient,
-          borderWidth: 2.5,
+          borderWidth: isMobile ? 2.0 : 2.5,
           borderDash: [], // CONTINUOUS SOLID LINE
-          pointRadius: displayBars.length > 45 ? 0 : 3,
-          pointHoverRadius: 6,
+          pointRadius: displayBars.length > 45 ? 0 : (isMobile ? 2.5 : 3),
+          pointHoverRadius: isMobile ? 4.5 : 6,
           pointBackgroundColor: solidLineColor,
           tension: 0.15,
           fill: true,
@@ -713,6 +726,7 @@ function renderForecastChart(data) {
   const market = data.market_data || {};
   const bars = market.bars || [];
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const isMobile = window.innerWidth < 640;
 
   const forecastLineColor = isDark ? '#00e5ff' : '#0284c7';
   const bandColor = isDark ? 'rgba(0, 229, 255, 0.15)' : 'rgba(2, 132, 199, 0.15)';
@@ -731,7 +745,10 @@ function renderForecastChart(data) {
   const latestDate = bars.length > 0 ? (bars[bars.length - 1].timestamp || '').slice(0, 10) : 'Current';
 
   // Anchor the forecast to the current close price
-  const labels = [latestDate + ' (Now)', ...forecasts.map(f => (f.target_date || `Step ${f.step}`).slice(0, 10))];
+  const labels = [
+    isMobile ? 'Now' : latestDate + ' (Now)',
+    ...forecasts.map(f => formatChartDate(f.target_date || `Step ${f.step}`, isMobile))
+  ];
   const predicted = [latestObservedClose, ...forecasts.map(f => f.predicted_price)];
   const upper = [latestObservedClose, ...forecasts.map(f => f.conf_upper)];
   const lower = [latestObservedClose, ...forecasts.map(f => f.conf_lower)];
@@ -746,10 +763,10 @@ function renderForecastChart(data) {
           data: predicted,
           borderColor: forecastLineColor,
           backgroundColor: 'transparent',
-          borderWidth: 2.8,
-          borderDash: [6, 4], // DOTTED PREDICTION LINE
-          pointRadius: 5,
-          pointHoverRadius: 7,
+          borderWidth: isMobile ? 2.2 : 2.8,
+          borderDash: [5, 4], // DOTTED PREDICTION LINE
+          pointRadius: isMobile ? 3.5 : 5,
+          pointHoverRadius: isMobile ? 5 : 7,
           pointBackgroundColor: forecastLineColor,
           tension: 0.25,
           fill: false,
@@ -785,22 +802,18 @@ function renderPriceChart(data) {
 }
 
 function getChartOptions(isDark, yLabel) {
+  const isMobile = window.innerWidth < 640;
   const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
   const textColor = isDark ? '#a0a0a0' : '#4b5563';
 
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 600 },
+    animation: { duration: 500 },
     interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: {
-        labels: {
-          color: textColor,
-          font: { size: 11, family: 'Inter' },
-          usePointStyle: true,
-          pointStyleWidth: 16,
-        }
+        display: false // The HTML legend in the header renders the badges cleanly
       },
       tooltip: {
         backgroundColor: isDark ? '#161616' : '#ffffff',
@@ -808,6 +821,9 @@ function getChartOptions(isDark, yLabel) {
         borderWidth: 1,
         titleColor: isDark ? '#e8e8e8' : '#1a1a2e',
         bodyColor: textColor,
+        padding: isMobile ? 8 : 12,
+        titleFont: { size: isMobile ? 11 : 12 },
+        bodyFont: { size: isMobile ? 11 : 12 },
         callbacks: {
           label: ctx => {
             if (ctx.parsed.y === null || ctx.parsed.y === undefined) return '';
@@ -819,16 +835,28 @@ function getChartOptions(isDark, yLabel) {
     scales: {
       x: {
         grid: { color: gridColor },
-        ticks: { color: textColor, font: { size: 10 }, maxTicksLimit: 10 }
+        ticks: {
+          color: textColor,
+          font: { size: isMobile ? 9 : 10 },
+          maxTicksLimit: isMobile ? 5 : 9,
+          maxRotation: 0,
+          autoSkip: true
+        }
       },
       y: {
         grid: { color: gridColor },
         ticks: {
           color: textColor,
-          font: { size: 11 },
-          callback: v => '₹' + v.toFixed(0)
+          font: { size: isMobile ? 9.5 : 11 },
+          callback: v => '₹' + v.toFixed(0),
+          maxTicksLimit: isMobile ? 5 : 8
         },
-        title: { display: true, text: yLabel, color: textColor, font: { size: 11 } }
+        title: {
+          display: !isMobile,
+          text: yLabel,
+          color: textColor,
+          font: { size: 11 }
+        }
       }
     }
   };
@@ -1969,6 +1997,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('popstate', e => {
     if (e.state?.page) showPage(e.state.page);
+  });
+
+  let _resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      if (currentResults) refreshCharts();
+    }, 250);
   });
 
   console.log('StockShield Frontend Initialized with Clean Executive Report, Live Ticker & Company Lookup ✅');

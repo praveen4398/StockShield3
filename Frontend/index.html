@@ -14,8 +14,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/theme.css?v=2.1.0" />
-  <link rel="stylesheet" href="css/dashboard.css?v=2.1.0" />
+  <link rel="stylesheet" href="css/theme.css?v=2.2.0" />
+  <link rel="stylesheet" href="css/dashboard.css?v=2.2.0" />
 
   <style>
     /* Extra page-specific tweaks */
@@ -788,13 +788,13 @@
 
           <!-- Overview Card -->
           <div class="overview-card">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
-              <div>
+            <div class="overview-top-row">
+              <div class="overview-top-left">
                 <div id="overview-ticker" class="overview-ticker">-</div>
                 <div class="overview-name">NSE Listed Equity</div>
                 <div id="overview-signal" style="margin-top:0.5rem;"></div>
               </div>
-              <div style="text-align:right;">
+              <div class="overview-top-right">
                 <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.3rem;">RECOMMENDATION</div>
                 <div id="overview-recommendation"></div>
               </div>
@@ -803,30 +803,30 @@
             <div class="divider"></div>
 
             <!-- Stats Row -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.75rem;margin-bottom:1rem;">
-              <div>
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Risk Score</div>
-                <div id="overview-risk" style="font-size:1.3rem;font-weight:800;">-</div>
+            <div class="overview-stats-grid" style="margin-bottom:1rem;">
+              <div class="stat-pill">
+                <div class="stat-pill-label">Risk Score</div>
+                <div id="overview-risk" class="stat-pill-val" style="font-size:1.25rem;font-weight:800;">-</div>
               </div>
-              <div>
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Sentiment</div>
-                <div id="overview-sentiment" style="margin-top:0.25rem;">-</div>
+              <div class="stat-pill">
+                <div class="stat-pill-label">Sentiment</div>
+                <div id="overview-sentiment" class="stat-pill-val" style="margin-top:0.25rem;">-</div>
               </div>
-              <div>
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Data Bars</div>
-                <div id="overview-bars" style="font-size:1rem;font-weight:600;">-</div>
+              <div class="stat-pill">
+                <div class="stat-pill-label">Data Bars</div>
+                <div id="overview-bars" class="stat-pill-val">-</div>
               </div>
-              <div>
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Horizon</div>
-                <div id="overview-horizon" style="font-size:0.9rem;font-weight:600;">-</div>
+              <div class="stat-pill">
+                <div class="stat-pill-label">Horizon</div>
+                <div id="overview-horizon" class="stat-pill-val">-</div>
               </div>
-              <div>
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Data Source</div>
-                <div id="overview-source" style="font-size:0.85rem;font-weight:600;">-</div>
+              <div class="stat-pill">
+                <div class="stat-pill-label">Data Source</div>
+                <div id="overview-source" class="stat-pill-val">-</div>
               </div>
-              <div>
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Run ID</div>
-                <div id="overview-runid" style="font-size:0.72rem;font-family:'JetBrains Mono',monospace;color:var(--text-muted);">-</div>
+              <div class="stat-pill stat-pill-wide">
+                <div class="stat-pill-label">Run ID</div>
+                <div id="overview-runid" class="stat-pill-val stat-pill-mono">-</div>
               </div>
             </div>
 
@@ -852,7 +852,7 @@
                 <div class="legend-item"><span id="histLatestClose" style="font-size:0.75rem;color:var(--text-primary);font-weight:700;">Latest: -</span></div>
               </div>
             </div>
-            <div style="height:300px;">
+            <div class="chart-canvas-wrap">
               <canvas id="historicalChart"></canvas>
             </div>
           </div>
@@ -871,7 +871,7 @@
                 <div class="legend-item"><div class="legend-line" style="background:rgba(0,229,255,0.25);height:6px;border-radius:2px;"></div> 95% Confidence Band</div>
               </div>
             </div>
-            <div style="height:300px;">
+            <div class="chart-canvas-wrap">
               <canvas id="forecastChart"></canvas>
             </div>
           </div>
@@ -1492,7 +1492,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/app.js?v=2.1.0"></script>
+  <script src="js/app.js?v=2.2.0"></script>
   <script>
     // Additional helper functions
     function quickSearch(ticker) {

@@ -219,6 +219,23 @@
   box-shadow: var(--shadow-neon);
 }
 
+.overview-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.overview-top-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-top-right {
+  text-align: right;
+}
+
 .overview-ticker {
   font-size: 2rem;
   font-weight: 800;
@@ -241,6 +258,7 @@
   border-radius: var(--radius-md);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  display: inline-block;
 }
 
 .recommendation-badge.BUY { background: var(--neon-green-glow); color: var(--neon-green); border: 1px solid var(--border-neon); }
@@ -249,10 +267,67 @@
 .recommendation-badge.CAUTION, .recommendation-badge.REJECTED { background: var(--accent-red-glow); color: var(--accent-red); border: 1px solid var(--border-red); }
 .recommendation-badge.APPROVED { background: var(--neon-green-glow); color: var(--neon-green); border: 1px solid var(--border-neon); }
 
+/* Overview Stats Grid & Modern Pills */
+.overview-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.65rem;
+}
+
+.stat-pill {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.stat-pill:hover {
+  border-color: rgba(0, 255, 65, 0.3);
+  background: rgba(0, 255, 65, 0.02);
+}
+
+.stat-pill-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.stat-pill-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-pill-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
 /* ===== Chart Container ===== */
 .chart-container {
   position: relative;
   background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  overflow: hidden;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 320px;
+}
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
@@ -997,5 +1072,192 @@ canvas { width: 100% !important; }
   .geni-fab-circle {
     width: 34px;
     height: 34px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Main content padding on mobile */
+  .main-content {
+    padding: 0.85rem 0.75rem;
+    gap: 0.85rem;
+  }
+
+  /* Search Panel on mobile */
+  .search-panel {
+    padding: 1rem 0.85rem;
+  }
+  .search-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    align-items: stretch;
+  }
+  .search-input-wrapper {
+    grid-column: span 2;
+    width: 100%;
+    min-width: 100%;
+  }
+  .search-row .form-group {
+    min-width: 0;
+    width: 100%;
+  }
+  .search-row .form-group:nth-child(4) {
+    grid-column: span 2;
+  }
+  .search-row .form-group:last-child {
+    grid-column: span 2;
+    margin-top: 0.2rem;
+  }
+  .search-row .form-group:last-child label {
+    display: none;
+  }
+  .analyze-btn {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.05rem;
+  }
+
+  /* Popular chips */
+  .market-ticker-row {
+    gap: 0.45rem;
+    padding: 0.25rem 0;
+  }
+  .market-chip {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  /* Overview Card on mobile */
+  .overview-card {
+    padding: 1rem 0.85rem;
+  }
+  .overview-top-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .overview-top-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    background: var(--bg-input);
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+  }
+  .overview-ticker {
+    font-size: 1.6rem !important;
+  }
+  .recommendation-badge {
+    font-size: 0.88rem !important;
+    padding: 0.35rem 0.9rem !important;
+  }
+  .overview-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .stat-pill-wide {
+    grid-column: span 2;
+  }
+
+  /* Charts on mobile */
+  .chart-container {
+    padding: 0.85rem 0.75rem;
+    border-radius: var(--radius-md);
+  }
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .chart-title {
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+  }
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.55rem;
+    font-size: 0.72rem;
+    width: 100%;
+  }
+  .chart-legend .legend-item span {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .chart-canvas-wrap {
+    height: 220px !important;
+  }
+
+  /* Agent Cards Grid on mobile */
+  .agents-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .agent-card-header {
+    padding: 0.75rem 0.85rem;
+  }
+  .agent-card-body {
+    padding: 0.75rem 0.85rem;
+  }
+
+  /* Agent Detail Header on mobile */
+  .agent-detail-header {
+    padding: 1rem 0.85rem;
+    gap: 0.85rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .agent-detail-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.35rem;
+  }
+  .agent-detail-meta h1 {
+    font-size: 1.25rem;
+  }
+
+  /* Full Report Box on mobile */
+  .full-report-box {
+    padding: 1rem 0.85rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    max-height: 520px;
+  }
+  .full-report-box .report-header-banner {
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.15rem;
+  }
+  .full-report-box .report-main-title {
+    font-size: 1.25rem;
+  }
+  .full-report-box .report-meta-grid {
+    grid-template-columns: 1fr;
+    padding: 0.75rem 0.85rem;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+  }
+  .full-report-box .report-section-header {
+    margin-top: 1.35rem;
+    margin-bottom: 0.65rem;
+  }
+  .full-report-box .report-sec-title {
+    font-size: 1.05rem;
+  }
+  .report-table-wrapper {
+    margin: 1rem 0;
+  }
+  .report-table th, .report-table td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.78rem;
   }
 }
