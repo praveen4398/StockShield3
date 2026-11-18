@@ -15,8 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy dependency requirements and install
 COPY requirements.txt pyproject.toml ./
-RUN pip install --no-cache-dir --no-deps google-adk==2.13.0 && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code, config, and data fixtures
 COPY src/ /app/src/
